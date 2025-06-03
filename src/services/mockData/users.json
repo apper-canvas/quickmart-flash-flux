@@ -1,0 +1,71 @@
+[
+  {
+    "id": "1",
+    "name": "Priya Sharma",
+    "email": "priya.sharma@email.com",
+    "addresses": [
+      {
+        "id": "1",
+        "type": "home",
+        "street": "123 MG Road",
+        "city": "Mumbai",
+        "state": "Maharashtra",
+        "pincode": "400001",
+        "isDefault": true
+      }
+    ],
+    "wishlist": ["1", "5", "10"],
+    "cart": [
+      {
+        "productId": "3",
+        "quantity": 1,
+        "addedAt": "2024-01-15T10:30:00Z"
+      }
+    ],
+    "orders": ["1", "2"]
+  },
+  {
+    "id": "2",
+    "name": "Rohit Kumar",
+    "email": "rohit.kumar@email.com",
+    "addresses": [
+      {
+        "id": "2",
+        "type": "home",
+        "street": "456 Brigade Road",
+        "city": "Bangalore",
+        "state": "Karnataka",
+        "pincode": "560001",
+        "isDefault": true
+      }
+    ],
+    "wishlist": ["2", "6", "8"],
+    "cart": [],
+    "orders": ["3"]
+  },
+  {
+    "id": "3",
+    "name": "Anjali Patel",
+    "email": "anjali.patel@email.com",
+    "addresses": [
+      {
+        "id": "3",
+        "type": "home",
+        "street": "789 CP Road",
+        "city": "Delhi",
+        "state": "Delhi",
+        "pincode": "110001",
+        "isDefault": true
+      }
+    ],
+    "wishlist": ["4", "7", "11"],
+    "cart": [
+      {
+        "productId": "7",
+        "quantity": 2,
+        "addedAt": "2024-01-16T14:20:00Z"
+      }
+    ],
+    "orders": []
+  }
+]

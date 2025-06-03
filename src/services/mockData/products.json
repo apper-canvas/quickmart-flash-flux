@@ -1,0 +1,287 @@
+[
+  {
+    "id": "1",
+    "name": "iPhone 15 Pro Max 256GB",
+    "description": "Latest iPhone with A17 Pro chip, titanium design, and advanced camera system",
+    "price": 159900,
+    "discountedPrice": 149900,
+    "images": [
+      "https://images.unsplash.com/photo-1696446701796-da61225697cc?w=400",
+      "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400"
+    ],
+    "category": "electronics",
+    "brand": "Apple",
+    "ratings": 4.8,
+    "stock": 12,
+    "seller": {
+      "name": "TechWorld Store",
+      "rating": 4.9
+    }
+  },
+  {
+    "id": "2",
+    "name": "Samsung Galaxy S24 Ultra",
+    "description": "Premium Android smartphone with S Pen, 200MP camera, and AI features",
+    "price": 134999,
+    "discountedPrice": 124999,
+    "images": [
+      "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400",
+      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400"
+    ],
+    "category": "electronics",
+    "brand": "Samsung",
+    "ratings": 4.7,
+    "stock": 8,
+    "seller": {
+      "name": "MobileMart",
+      "rating": 4.8
+    }
+  },
+  {
+    "id": "3",
+    "name": "Nike Air Max 270 Running Shoes",
+    "description": "Comfortable running shoes with Air Max cushioning and breathable mesh upper",
+    "price": 12995,
+    "discountedPrice": 8997,
+    "images": [
+      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400",
+      "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400"
+    ],
+    "category": "sports",
+    "brand": "Nike",
+    "ratings": 4.6,
+    "stock": 25,
+    "seller": {
+      "name": "SportZone",
+      "rating": 4.7
+    }
+  },
+  {
+    "id": "4",
+    "name": "Levi's 501 Original Fit Jeans",
+    "description": "Classic straight-leg jeans made from premium denim with iconic styling",
+    "price": 4999,
+    "discountedPrice": 3499,
+    "images": [
+      "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400",
+      "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=400"
+    ],
+    "category": "clothing",
+    "brand": "Levi's",
+    "ratings": 4.5,
+    "stock": 18,
+    "seller": {
+      "name": "Fashion Hub",
+      "rating": 4.6
+    }
+  },
+  {
+    "id": "5",
+    "name": "MacBook Air M3 13-inch",
+    "description": "Ultra-thin laptop powered by M3 chip with all-day battery life",
+    "price": 114900,
+    "discountedPrice": 109900,
+    "images": [
+      "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=400",
+      "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400"
+    ],
+    "category": "electronics",
+    "brand": "Apple",
+    "ratings": 4.9,
+    "stock": 6,
+    "seller": {
+      "name": "CompuWorld",
+      "rating": 4.9
+    }
+  },
+  {
+    "id": "6",
+    "name": "Sony WH-1000XM5 Headphones",
+    "description": "Industry-leading noise canceling wireless headphones with 30-hour battery",
+    "price": 29990,
+    "discountedPrice": 24990,
+    "images": [
+      "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=400",
+      "https://images.unsplash.com/photo-1583394838336-acd977736f90?w=400"
+    ],
+    "category": "electronics",
+    "brand": "Sony",
+    "ratings": 4.8,
+    "stock": 15,
+    "seller": {
+      "name": "AudioTech",
+      "rating": 4.8
+    }
+  },
+  {
+    "id": "7",
+    "name": "The Psychology of Money",
+    "description": "Timeless lessons on wealth, greed, and happiness by Morgan Housel",
+    "price": 599,
+    "discountedPrice": 449,
+    "images": [
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400",
+      "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400"
+    ],
+    "category": "books",
+    "brand": "Harriman House",
+    "ratings": 4.9,
+    "stock": 42,
+    "seller": {
+      "name": "BookWorld",
+      "rating": 4.7
+    }
+  },
+  {
+    "id": "8",
+    "name": "Adidas Ultraboost 23 Shoes",
+    "description": "Energy-returning running shoes with Boost midsole and Primeknit upper",
+    "price": 17999,
+    "discountedPrice": 12599,
+    "images": [
+      "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400",
+      "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400"
+    ],
+    "category": "sports",
+    "brand": "Adidas",
+    "ratings": 4.7,
+    "stock": 22,
+    "seller": {
+      "name": "RunZone",
+      "rating": 4.6
+    }
+  },
+  {
+    "id": "9",
+    "name": "IKEA HEMNES Bed Frame",
+    "description": "Solid wood bed frame with traditional design and adjustable bed sides",
+    "price": 24990,
+    "discountedPrice": 19990,
+    "images": [
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400",
+      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400"
+    ],
+    "category": "home",
+    "brand": "IKEA",
+    "ratings": 4.4,
+    "stock": 5,
+    "seller": {
+      "name": "HomeDecor Plus",
+      "rating": 4.5
+    }
+  },
+  {
+    "id": "10",
+    "name": "Canon EOS R6 Mark II Camera",
+    "description": "Full-frame mirrorless camera with dual pixel autofocus and 4K video",
+    "price": 224995,
+    "discountedPrice": 199995,
+    "images": [
+      "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400",
+      "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=400"
+    ],
+    "category": "electronics",
+    "brand": "Canon",
+    "ratings": 4.8,
+    "stock": 3,
+    "seller": {
+      "name": "PhotoPro",
+      "rating": 4.9
+    }
+  },
+  {
+    "id": "11",
+    "name": "Zara Cotton Blend Shirt",
+    "description": "Casual cotton shirt with modern fit and premium quality fabric",
+    "price": 2990,
+    "discountedPrice": 1990,
+    "images": [
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=400",
+      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400"
+    ],
+    "category": "clothing",
+    "brand": "Zara",
+    "ratings": 4.3,
+    "stock": 31,
+    "seller": {
+      "name": "StyleStore",
+      "rating": 4.4
+    }
+  },
+  {
+    "id": "12",
+    "name": "Philips Air Fryer XXL",
+    "description": "Large capacity air fryer with rapid air technology for healthy cooking",
+    "price": 19995,
+    "discountedPrice": 14995,
+    "images": [
+      "https://images.unsplash.com/photo-1585515656840-2103bb40ad16?w=400",
+      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400"
+    ],
+    "category": "home",
+    "brand": "Philips",
+    "ratings": 4.6,
+    "stock": 11,
+    "seller": {
+      "name": "KitchenWorld",
+      "rating": 4.7
+    }
+  },
+  {
+    "id": "13",
+    "name": "Harry Potter Complete Series",
+    "description": "Complete set of 7 Harry Potter books by J.K. Rowling in paperback",
+    "price": 3999,
+    "discountedPrice": 2799,
+    "images": [
+      "https://images.unsplash.com/photo-1551029506-0807df4e2031?w=400",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400"
+    ],
+    "category": "books",
+    "brand": "Bloomsbury",
+    "ratings": 4.9,
+    "stock": 28,
+    "seller": {
+      "name": "ReadMore Books",
+      "rating": 4.8
+    }
+  },
+  {
+    "id": "14",
+    "name": "Wilson Tennis Racket Pro",
+    "description": "Professional tennis racket with carbon fiber frame and perfect balance",
+    "price": 8999,
+    "discountedPrice": 6499,
+    "images": [
+      "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=400",
+      "https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=400"
+    ],
+    "category": "sports",
+    "brand": "Wilson",
+    "ratings": 4.5,
+    "stock": 14,
+    "seller": {
+      "name": "TennisPro",
+      "rating": 4.6
+    }
+  },
+  {
+    "id": "15",
+    "name": "H&M Oversized Hoodie",
+    "description": "Comfortable oversized hoodie made from soft cotton blend fabric",
+    "price": 1999,
+    "discountedPrice": 1299,
+    "images": [
+      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400",
+      "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400"
+    ],
+    "category": "clothing",
+    "brand": "H&M",
+    "ratings": 4.2,
+    "stock": 37,
+    "seller": {
+      "name": "TrendyWear",
+      "rating": 4.3
+    }
+  }
+]

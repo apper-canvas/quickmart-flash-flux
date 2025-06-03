@@ -1,0 +1,84 @@
+[
+  {
+    "id": "1",
+    "userId": "1",
+    "items": [
+      {
+        "productId": "1",
+        "productName": "iPhone 15 Pro Max 256GB",
+        "quantity": 1,
+        "price": 149900,
+        "image": "https://images.unsplash.com/photo-1696446701796-da61225697cc?w=400"
+      }
+    ],
+    "totalAmount": 149900,
+    "paymentMethod": "credit_card",
+    "status": "delivered",
+    "deliveryAddress": {
+      "street": "123 MG Road",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "pincode": "400001"
+    },
+    "trackingId": "QM12345678",
+    "createdAt": "2024-01-10T09:15:00Z",
+    "deliveredAt": "2024-01-15T16:30:00Z"
+  },
+  {
+    "id": "2",
+    "userId": "1",
+    "items": [
+      {
+        "productId": "6",
+        "productName": "Sony WH-1000XM5 Headphones",
+        "quantity": 1,
+        "price": 24990,
+        "image": "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=400"
+      },
+      {
+        "productId": "7",
+        "productName": "The Psychology of Money",
+        "quantity": 1,
+        "price": 449,
+        "image": "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400"
+      }
+    ],
+    "totalAmount": 25439,
+    "paymentMethod": "upi",
+    "status": "shipped",
+    "deliveryAddress": {
+      "street": "123 MG Road",
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "pincode": "400001"
+    },
+    "trackingId": "QM87654321",
+    "createdAt": "2024-01-18T11:45:00Z",
+    "estimatedDelivery": "2024-01-22T18:00:00Z"
+  },
+  {
+    "id": "3",
+    "userId": "2",
+    "items": [
+      {
+        "productId": "2",
+        "productName": "Samsung Galaxy S24 Ultra",
+        "quantity": 1,
+        "price": 124999,
+        "image": "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400"
+      }
+    ],
+    "totalAmount": 124999,
+    "paymentMethod": "emi",
+    "status": "confirmed",
+    "deliveryAddress": {
+      "street": "456 Brigade Road",
+      "city": "Bangalore",
+      "state": "Karnataka",
+      "pincode": "560001"
+    },
+    "trackingId": "QM11223344",
+    "createdAt": "2024-01-20T13:20:00Z",
+    "estimatedDelivery": "2024-01-25T17:00:00Z"
+  }
+]
