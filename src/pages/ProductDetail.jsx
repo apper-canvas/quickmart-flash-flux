@@ -30,6 +30,21 @@ const [showWarranty, setShowWarranty] = useState(false)
   const [userComment, setUserComment] = useState('')
   const [submittingRating, setSubmittingRating] = useState(false)
   const [ratingStats, setRatingStats] = useState(null)
+  const [checkoutOpen, setCheckoutOpen] = useState(false)
+  const [checkoutData, setCheckoutData] = useState({
+    shippingAddress: {
+      fullName: '',
+      address: '',
+      city: '',
+      state: '',
+      pincode: '',
+      phone: ''
+    },
+    paymentMethod: 'cod',
+    specialInstructions: ''
+  })
+  const [processingOrder, setProcessingOrder] = useState(false)
+  const [orderCreated, setOrderCreated] = useState(null)
   const [offers] = useState([
     {
       type: 'bank',
@@ -336,10 +351,110 @@ if (warrantyRegistered) {
     }
   }
   
-  const buyNow = () => {
-    addToCart()
-    toast.success("Proceeding to checkout...")
-    // Navigate to checkout page (would be implemented)
+const buyNow = () => {
+    if (!product) return
+    
+    // Validate size selection for applicable products
+    if (sizeChartAvailable && !selectedSize) {
+      toast.error("Please select a size before purchasing")
+      return
+    }
+    
+    // Open checkout modal
+    setCheckoutOpen(true)
+    toast.info("Opening checkout...")
+  }
+
+  const handleCheckoutSubmit = async () => {
+    // Validate checkout data
+    const { shippingAddress } = checkoutData
+    
+    if (!shippingAddress.fullName.trim()) {
+      toast.error("Please enter your full name")
+      return
+    }
+    
+    if (!shippingAddress.address.trim()) {
+      toast.error("Please enter your address")
+      return
+    }
+    
+    if (!shippingAddress.city.trim()) {
+      toast.error("Please enter your city")
+      return
+    }
+    
+    if (!shippingAddress.state.trim()) {
+      toast.error("Please enter your state")
+      return
+    }
+    
+    if (!shippingAddress.pincode.trim() || shippingAddress.pincode.length < 5) {
+      toast.error("Please enter a valid pincode")
+      return
+    }
+    
+    if (!shippingAddress.phone.trim() || shippingAddress.phone.length < 10) {
+      toast.error("Please enter a valid phone number")
+      return
+    }
+
+    setProcessingOrder(true)
+    
+    try {
+      // Create order data
+      const orderData = {
+        items: [{
+          productId: product.id,
+          name: product.name,
+          price: product.discountedPrice || product.price,
+          quantity: quantity,
+          size: selectedSize || null,
+          image: product.images?.[0]
+        }],
+        shippingAddress: checkoutData.shippingAddress,
+        paymentMethod: checkoutData.paymentMethod,
+        specialInstructions: checkoutData.specialInstructions,
+        totalAmount: (product.discountedPrice || product.price) * quantity,
+        orderDate: new Date().toISOString()
+      }
+
+      // Simulate order creation (replace with actual API call)
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      
+      const createdOrder = {
+        id: `ORD${Date.now()}`,
+        ...orderData,
+        status: 'confirmed',
+        estimatedDelivery: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString()
+      }
+      
+      setOrderCreated(createdOrder)
+      toast.success("Order placed successfully!")
+      
+    } catch (error) {
+      console.error('Order creation failed:', error)
+      toast.error("Failed to place order. Please try again.")
+    } finally {
+      setProcessingOrder(false)
+    }
+  }
+
+  const closeCheckout = () => {
+    setCheckoutOpen(false)
+    setOrderCreated(null)
+    setCheckoutData({
+      shippingAddress: {
+        fullName: '',
+        address: '',
+        city: '',
+        state: '',
+        pincode: '',
+        phone: ''
+      },
+      paymentMethod: 'cod',
+      specialInstructions: ''
+    })
   }
 
   if (loading) {
@@ -1369,7 +1484,363 @@ if (warrantyRegistered) {
             </div>
           </div>
         )}
-      </motion.div>
+</motion.div>
+
+      {/* Buy Now Checkout Modal */}
+      <AnimatePresence>
+        {checkoutOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeCheckout}
+              className="fixed inset-0 bg-black/50 z-50"
+            />
+            
+            {/* Checkout Modal */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            >
+              <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                {!orderCreated ? (
+                  <>
+                    {/* Checkout Header */}
+                    <div className="flex items-center justify-between p-6 border-b">
+                      <h3 className="text-2xl font-bold text-gray-800">Complete Your Purchase</h3>
+                      <button
+                        onClick={closeCheckout}
+                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                      >
+                        <ApperIcon name="X" className="h-6 w-6" />
+                      </button>
+                    </div>
+
+                    <div className="p-6">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        {/* Order Summary */}
+                        <div className="space-y-6">
+                          <div>
+                            <h4 className="text-lg font-semibold mb-4">Order Summary</h4>
+                            <div className="bg-gray-50 rounded-xl p-4">
+                              <div className="flex items-start space-x-4">
+                                <img
+                                  src={product.images?.[0] || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100'}
+                                  alt={product.name}
+                                  className="w-20 h-20 object-cover rounded-lg"
+                                />
+                                <div className="flex-1">
+                                  <h5 className="font-medium text-gray-800">{product.name}</h5>
+                                  <p className="text-sm text-gray-600">{product.brand}</p>
+                                  {selectedSize && (
+                                    <p className="text-sm text-gray-600">Size: {selectedSize}</p>
+                                  )}
+                                  <div className="flex items-center justify-between mt-2">
+                                    <span className="text-sm text-gray-600">Qty: {quantity}</span>
+                                    <span className="font-semibold text-primary">
+                                      ₹{((product.discountedPrice || product.price) * quantity).toLocaleString()}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Price Breakdown */}
+                          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4">
+                            <h5 className="font-semibold mb-3">Price Details</h5>
+                            <div className="space-y-2">
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">Item Total:</span>
+                                <span>₹{((product.discountedPrice || product.price) * quantity).toLocaleString()}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-600">Delivery Charges:</span>
+                                <span className="text-green-600">FREE</span>
+                              </div>
+                              <div className="border-t pt-2">
+                                <div className="flex justify-between font-semibold text-lg">
+                                  <span>Total Amount:</span>
+                                  <span className="text-primary">
+                                    ₹{((product.discountedPrice || product.price) * quantity).toLocaleString()}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Checkout Form */}
+                        <div className="space-y-6">
+                          {/* Shipping Address */}
+                          <div>
+                            <h4 className="text-lg font-semibold mb-4">Shipping Address</h4>
+                            <div className="space-y-4">
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                  Full Name *
+                                </label>
+                                <input
+                                  type="text"
+                                  value={checkoutData.shippingAddress.fullName}
+                                  onChange={(e) => setCheckoutData(prev => ({
+                                    ...prev,
+                                    shippingAddress: { ...prev.shippingAddress, fullName: e.target.value }
+                                  }))}
+                                  placeholder="Enter your full name"
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                />
+                              </div>
+
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                  Address *
+                                </label>
+                                <textarea
+                                  value={checkoutData.shippingAddress.address}
+                                  onChange={(e) => setCheckoutData(prev => ({
+                                    ...prev,
+                                    shippingAddress: { ...prev.shippingAddress, address: e.target.value }
+                                  }))}
+                                  placeholder="Enter your complete address"
+                                  rows={3}
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                                />
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    City *
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={checkoutData.shippingAddress.city}
+                                    onChange={(e) => setCheckoutData(prev => ({
+                                      ...prev,
+                                      shippingAddress: { ...prev.shippingAddress, city: e.target.value }
+                                    }))}
+                                    placeholder="City"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    State *
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={checkoutData.shippingAddress.state}
+                                    onChange={(e) => setCheckoutData(prev => ({
+                                      ...prev,
+                                      shippingAddress: { ...prev.shippingAddress, state: e.target.value }
+                                    }))}
+                                    placeholder="State"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Pincode *
+                                  </label>
+                                  <input
+                                    type="text"
+                                    value={checkoutData.shippingAddress.pincode}
+                                    onChange={(e) => setCheckoutData(prev => ({
+                                      ...prev,
+                                      shippingAddress: { ...prev.shippingAddress, pincode: e.target.value.replace(/\D/g, '').slice(0, 6) }
+                                    }))}
+                                    placeholder="Pincode"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                  />
+                                </div>
+
+                                <div>
+                                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Phone Number *
+                                  </label>
+                                  <input
+                                    type="tel"
+                                    value={checkoutData.shippingAddress.phone}
+                                    onChange={(e) => setCheckoutData(prev => ({
+                                      ...prev,
+                                      shippingAddress: { ...prev.shippingAddress, phone: e.target.value.replace(/\D/g, '').slice(0, 10) }
+                                    }))}
+                                    placeholder="Phone Number"
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Payment Method */}
+                          <div>
+                            <h4 className="text-lg font-semibold mb-4">Payment Method</h4>
+                            <div className="space-y-3">
+                              <label className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input
+                                  type="radio"
+                                  name="paymentMethod"
+                                  value="cod"
+                                  checked={checkoutData.paymentMethod === 'cod'}
+                                  onChange={(e) => setCheckoutData(prev => ({ ...prev, paymentMethod: e.target.value }))}
+                                  className="text-primary focus:ring-primary"
+                                />
+                                <ApperIcon name="Truck" className="h-5 w-5 text-green-600" />
+                                <div>
+                                  <span className="font-medium">Cash on Delivery</span>
+                                  <p className="text-sm text-gray-600">Pay when your order arrives</p>
+                                </div>
+                              </label>
+
+                              <label className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input
+                                  type="radio"
+                                  name="paymentMethod"
+                                  value="card"
+                                  checked={checkoutData.paymentMethod === 'card'}
+                                  onChange={(e) => setCheckoutData(prev => ({ ...prev, paymentMethod: e.target.value }))}
+                                  className="text-primary focus:ring-primary"
+                                />
+                                <ApperIcon name="CreditCard" className="h-5 w-5 text-blue-600" />
+                                <div>
+                                  <span className="font-medium">Credit/Debit Card</span>
+                                  <p className="text-sm text-gray-600">Secure online payment</p>
+                                </div>
+                              </label>
+
+                              <label className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input
+                                  type="radio"
+                                  name="paymentMethod"
+                                  value="upi"
+                                  checked={checkoutData.paymentMethod === 'upi'}
+                                  onChange={(e) => setCheckoutData(prev => ({ ...prev, paymentMethod: e.target.value }))}
+                                  className="text-primary focus:ring-primary"
+                                />
+                                <ApperIcon name="Smartphone" className="h-5 w-5 text-purple-600" />
+                                <div>
+                                  <span className="font-medium">UPI Payment</span>
+                                  <p className="text-sm text-gray-600">Pay via UPI apps</p>
+                                </div>
+                              </label>
+                            </div>
+                          </div>
+
+                          {/* Special Instructions */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              Special Instructions (Optional)
+                            </label>
+                            <textarea
+                              value={checkoutData.specialInstructions}
+                              onChange={(e) => setCheckoutData(prev => ({ ...prev, specialInstructions: e.target.value }))}
+                              placeholder="Any special delivery instructions..."
+                              rows={2}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Place Order Button */}
+                      <div className="border-t pt-6 mt-8">
+                        <div className="flex items-center justify-between">
+                          <div className="text-right">
+                            <p className="text-sm text-gray-600">Total Amount</p>
+                            <p className="text-2xl font-bold text-primary">
+                              ₹{((product.discountedPrice || product.price) * quantity).toLocaleString()}
+                            </p>
+                          </div>
+                          <button
+                            onClick={handleCheckoutSubmit}
+                            disabled={processingOrder}
+                            className="bg-primary hover:bg-primary-dark text-white px-8 py-3 rounded-lg font-semibold transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center space-x-2"
+                          >
+                            {processingOrder ? (
+                              <>
+                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                                <span>Processing Order...</span>
+                              </>
+                            ) : (
+                              <>
+                                <ApperIcon name="ShoppingBag" className="h-5 w-5" />
+                                <span>Place Order</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  /* Order Success */
+                  <div className="p-8 text-center">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 0.5 }}
+                      className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"
+                    >
+                      <ApperIcon name="CheckCircle" className="h-12 w-12 text-green-600" />
+                    </motion.div>
+                    
+                    <h3 className="text-2xl font-bold text-gray-800 mb-2">Order Placed Successfully!</h3>
+                    <p className="text-gray-600 mb-6">Thank you for your purchase. Your order has been confirmed.</p>
+                    
+                    <div className="bg-gray-50 rounded-xl p-6 mb-6 text-left max-w-md mx-auto">
+                      <h4 className="font-semibold mb-3">Order Details</h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Order ID:</span>
+                          <span className="font-medium">{orderCreated.id}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Payment Method:</span>
+                          <span className="font-medium capitalize">{orderCreated.paymentMethod}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Estimated Delivery:</span>
+                          <span className="font-medium">{orderCreated.estimatedDelivery}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600">Total Amount:</span>
+                          <span className="font-medium text-primary">₹{orderCreated.totalAmount.toLocaleString()}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex space-x-4 justify-center">
+                      <button
+                        onClick={closeCheckout}
+                        className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition-colors"
+                      >
+                        Continue Shopping
+                      </button>
+                      <button
+                        onClick={() => toast.info("Order tracking feature coming soon!")}
+                        className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors"
+                      >
+                        Track Order
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
