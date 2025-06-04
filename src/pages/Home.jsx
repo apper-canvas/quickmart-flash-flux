@@ -207,8 +207,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-
-      {/* Main Content */}
+{/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <MainFeature 
           products={filteredProducts}
@@ -217,6 +216,7 @@ const Home = () => {
         />
       </main>
 
+      {/* Cart Sidebar */}
       {/* Cart Sidebar */}
       <AnimatePresence>
         {cartOpen && (
