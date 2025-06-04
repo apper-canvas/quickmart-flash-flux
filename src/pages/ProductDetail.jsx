@@ -11,11 +11,50 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [selectedImage, setSelectedImage] = useState(0)
+const [selectedImage, setSelectedImage] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [activeTab, setActiveTab] = useState('description')
+  const [showOffers, setShowOffers] = useState(false)
   const [cart, setCart] = useState([])
   const [relatedProducts, setRelatedProducts] = useState([])
+  const [offers] = useState([
+    {
+      type: 'bank',
+      title: 'Bank Offer',
+      description: '10% Instant Discount with HDFC Bank Credit Cards',
+      code: 'HDFC10',
+      savings: '₹200',
+      icon: 'CreditCard',
+      color: 'blue'
+    },
+    {
+      type: 'cashback',
+      title: 'Cashback Offer',
+      description: 'Get 5% cashback up to ₹150 on first order',
+      code: 'FIRST5',
+      savings: '₹150',
+      icon: 'Gift',
+      color: 'green'
+    },
+    {
+      type: 'coupon',
+      title: 'Coupon Code',
+      description: 'Extra ₹100 off on orders above ₹999',
+      code: 'SAVE100',
+      savings: '₹100',
+      icon: 'Tag',
+      color: 'purple'
+    },
+    {
+      type: 'exchange',
+      title: 'Exchange Offer',
+      description: 'Up to ₹5000 off on exchange of old products',
+      code: 'EXCHANGE',
+      savings: '₹5000',
+      icon: 'RefreshCw',
+      color: 'orange'
+    }
+  ])
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -237,6 +276,83 @@ const ProductDetail = () => {
                 )}
               </div>
               <p className="text-green-600 text-sm font-medium">Inclusive of all taxes</p>
+</div>
+
+            {/* Available Offers */}
+            <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-4 border border-green-200">
+              <div 
+                className="flex items-center justify-between cursor-pointer"
+                onClick={() => setShowOffers(!showOffers)}
+              >
+                <div className="flex items-center space-x-2">
+                  <ApperIcon name="Zap" className="h-5 w-5 text-orange-500" />
+                  <h3 className="font-semibold text-gray-800">Available Offers</h3>
+                  <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                    {offers.length} Offers
+                  </span>
+                </div>
+                <motion.div
+                  animate={{ rotate: showOffers ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ApperIcon name="ChevronDown" className="h-5 w-5 text-gray-600" />
+                </motion.div>
+              </div>
+
+              <AnimatePresence>
+                {showOffers && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="mt-4 space-y-3"
+                  >
+                    {offers.map((offer, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="bg-white rounded-lg p-3 border border-gray-200 hover:shadow-md transition-shadow"
+                      >
+                        <div className="flex items-start space-x-3">
+                          <div className={`p-2 rounded-full bg-${offer.color}-100`}>
+                            <ApperIcon name={offer.icon} className={`h-4 w-4 text-${offer.color}-600`} />
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between mb-1">
+                              <h4 className="font-medium text-gray-800">{offer.title}</h4>
+                              <span className="text-sm font-semibold text-green-600">{offer.savings}</span>
+                            </div>
+                            <p className="text-sm text-gray-600 mb-2">{offer.description}</p>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded border-dashed border">
+                                {offer.code}
+                              </span>
+                              <button 
+                                onClick={() => {
+                                  navigator.clipboard.writeText(offer.code)
+                                  toast.success(`Code ${offer.code} copied to clipboard!`)
+                                }}
+                                className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                              >
+                                Copy Code
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                    
+                    <div className="text-center pt-2">
+                      <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                        View All Offers & Terms
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Quantity Selector */}
