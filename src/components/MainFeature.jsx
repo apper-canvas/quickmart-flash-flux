@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import ApperIcon from './ApperIcon'
-import { useCart } from '../hooks/useCart'
+import { useCart } from '../contexts/CartContext'
+
 const MainFeature = ({ products = [], loading = false, onAddToCart, onProductClick }) => {
-const [sortBy, setSortBy] = useState('featured')
+  const [sortBy, setSortBy] = useState('featured')
   const [viewMode, setViewMode] = useState('grid')
   const [priceRange, setPriceRange] = useState([0, 50000])
   const [selectedBrands, setSelectedBrands] = useState([])

@@ -393,9 +393,10 @@
   }
   
   .upi-interface {
-    padding: 1.5rem;
+padding: 1.5rem;
   }
-.upi-app-grid {
+  
+  .upi-app-grid {
     grid-template-columns: repeat(3, 1fr);
   }
   .payment-method-card {
