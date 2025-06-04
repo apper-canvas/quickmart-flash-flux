@@ -19,17 +19,14 @@ function App() {
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
+closeOnClick
         rtl={false}
         pauseOnFocusLoss
         draggable
         pauseOnHover
         theme="light"
-        toastClassName="shadow-lg"
-        bodyClassName="text-sm font-medium"
-        className="z-50"
       />
     </div>
   )
-}
 
 export default App

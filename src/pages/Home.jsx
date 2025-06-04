@@ -11,9 +11,44 @@ const Home = () => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [cart, setCart] = useState([])
-  const [cartOpen, setCartOpen] = useState(false)
+const [cartOpen, setCartOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
+
+  // Cart utility functions and computed values
+  const cartItemCount = cart.reduce((total, item) => total + (item?.quantity || 1), 0)
+  
+  const cartTotal = cart.reduce((total, item) => {
+    const price = item?.discountedPrice || item?.price || 0
+    const quantity = item?.quantity || 1
+    return total + (price * quantity)
+  }, 0)
+
+  const addToCart = (product) => {
+    const existingItem = cart.find(item => item.id === product.id)
+    if (existingItem) {
+      updateCartQuantity(product.id, existingItem.quantity + 1)
+    } else {
+      setCart(prev => [...prev, { ...product, quantity: 1 }])
+      toast.success("Product added to cart!")
+    }
+  }
+
+  const updateCartQuantity = (productId, newQuantity) => {
+    if (newQuantity <= 0) {
+      removeFromCart(productId)
+      return
+    }
+    setCart(prev => prev.map(item => 
+      item.id === productId ? { ...item, quantity: newQuantity } : item
+    ))
+  }
+
+  const removeFromCart = (productId) => {
+    setCart(prev => prev.filter(item => item.id !== productId))
+    toast.success("Product removed from cart")
+  }
+
   useEffect(() => {
     const loadProducts = async () => {
       setLoading(true)
@@ -34,58 +69,13 @@ const Home = () => {
     navigate(`/product/${productId}`)
   }
 
-  const addToCart = (product) => {
-    setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === product.id)
-      if (existingItem) {
-        const updatedCart = prevCart.map(item =>
-          item.id === product.id 
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
-        toast.success(`Updated ${product.name} quantity in cart`)
-        return updatedCart
-      } else {
-        const newCart = [...prevCart, { ...product, quantity: 1 }]
-        toast.success(`${product.name} added to cart`)
-        return newCart
-      }
-    })
-  }
-
-  const removeFromCart = (productId) => {
-    setCart(prevCart => {
-      const updatedCart = prevCart.filter(item => item.id !== productId)
-      toast.success("Item removed from cart")
-      return updatedCart
-    })
-  }
-
-  const updateCartQuantity = (productId, newQuantity) => {
-    if (newQuantity <= 0) {
-      removeFromCart(productId)
-      return
-    }
-    
-    setCart(prevCart => 
-      prevCart.map(item =>
-        item.id === productId 
-          ? { ...item, quantity: newQuantity }
-          : item
-      )
-    )
-  }
-
-  const categories = ["all", "electronics", "clothing", "home", "books", "sports"]
+const categories = ["all", "electronics", "clothing", "home", "books", "sports"]
   
   const filteredProducts = products?.filter(product => {
     const matchesSearch = product?.name?.toLowerCase().includes(searchQuery.toLowerCase()) || false
     const matchesCategory = selectedCategory === "all" || product?.category === selectedCategory
     return matchesSearch && matchesCategory
   }) || []
-
-  const cartTotal = cart.reduce((total, item) => total + (item?.discountedPrice || item?.price || 0) * (item?.quantity || 0), 0)
-  const cartItemCount = cart.reduce((total, item) => total + (item?.quantity || 0), 0)
 
   if (error && !loading) {
     return (
