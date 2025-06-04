@@ -125,13 +125,12 @@ const productService = {
       throw new Error('Product or rating not found')
     }
 
-    const ratingIndex = product.reviews.findIndex(r => r.id === ratingId)
+const ratingIndex = product.reviews.findIndex(r => r.id === ratingId)
     if (ratingIndex === -1) {
       throw new Error('Rating not found')
     }
 
     product.reviews[ratingIndex] = { ...product.reviews[ratingIndex], ...updates }
-product.reviews[ratingIndex] = { ...product.reviews[ratingIndex], ...updates }
     return { ...product.reviews[ratingIndex] }
   },
 

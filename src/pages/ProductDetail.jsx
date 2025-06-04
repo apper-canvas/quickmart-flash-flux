@@ -130,12 +130,16 @@ const [warrantyInfo] = useState({
 
   const handleSizeSelection = (size) => {
     setSelectedSize(size)
-    toast.success(`Size ${size} selected`)
+toast.success(`Size ${size} selected`)
   }
   
   useEffect(() => {
     const loadProduct = async () => {
+      if (!id) return
+      
       setLoading(true)
+      setError(null)
+      
       try {
         const productData = await productService.getById(id)
         setProduct(productData)
@@ -149,35 +153,34 @@ const [warrantyInfo] = useState({
       } finally {
         setLoading(false)
       }
-}
-    
-    if (id) {
-      loadProduct()
     }
+    
+    loadProduct()
   }, [id])
+
   // Load rating statistics
   useEffect(() => {
     const loadRatingStats = async () => {
-      if (!id) return
+      if (!id || !product) return
       
       try {
         const stats = await productService.getRatings(id)
         setRatingStats(stats)
       } catch (err) {
         console.error('Failed to load rating stats:', err)
-}
+      }
     }
     
     loadRatingStats()
-  }, [id])
+  }, [id, product])
 
   // Update size chart availability when product loads
   useEffect(() => {
-    if (product) {
-      setSizeChartAvailable(['clothing', 'sports', 'shoes'].includes(product.category))
+    if (product?.category) {
+      const hasSize = ['clothing', 'sports', 'shoes'].includes(product.category)
+      setSizeChartAvailable(hasSize)
     }
   }, [product])
-
   const addToCart = () => {
     if (!product) return
     
