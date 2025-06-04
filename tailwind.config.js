@@ -112,32 +112,9 @@ spacing: {
           '0%, 100%': { transform: 'scale(1)', opacity: '1' },
           '50%': { transform: 'scale(1.05)', opacity: '0.8' }
         },
-        secureGlow: {
+secureGlow: {
           '0%': { boxShadow: '0 0 5px rgba(34, 197, 94, 0.3)' },
           '100%': { boxShadow: '0 0 20px rgba(34, 197, 94, 0.6)' }
-        },
-        cartBounce: {
-          '0%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.2) rotate(10deg)' },
-          '100%': { transform: 'scale(1) rotate(0deg)' }
-        },
-        cartItemAdd: {
-          '0%': { transform: 'scale(0) translateY(-50px)', opacity: '0' },
-          '50%': { transform: 'scale(1.1) translateY(-10px)', opacity: '0.8' },
-          '100%': { transform: 'scale(1) translateY(0)', opacity: '1' }
-        },
-        cartNotification: {
-          '0%': { transform: 'scale(0.8)', opacity: '0' },
-          '100%': { transform: 'scale(1)', opacity: '1' }
-        },
-        cartSlideIn: {
-          '0%': { transform: 'translateX(100%)', opacity: '0' },
-          '100%': { transform: 'translateX(0)', opacity: '1' }
-        },
-        cartCountPulse: {
-          '0%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.3)' },
-          '100%': { transform: 'scale(1)' }
         }
       }
     },
