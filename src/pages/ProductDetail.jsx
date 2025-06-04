@@ -18,8 +18,10 @@ const [quantity, setQuantity] = useState(1)
   const [deliveryCode, setDeliveryCode] = useState('')
   const [deliveryInfo, setDeliveryInfo] = useState(null)
   const [checkingDelivery, setCheckingDelivery] = useState(false)
-  const [cart, setCart] = useState([])
+const [cart, setCart] = useState([])
   const [relatedProducts, setRelatedProducts] = useState([])
+  const [showWarranty, setShowWarranty] = useState(false)
+  const [warrantyRegistered, setWarrantyRegistered] = useState(false)
   const [offers] = useState([
     {
       type: 'bank',
@@ -54,11 +56,28 @@ const [quantity, setQuantity] = useState(1)
       description: 'Up to ₹5000 off on exchange of old products',
       code: 'EXCHANGE',
       savings: '₹5000',
-      icon: 'RefreshCw',
-      color: 'orange'
+color: 'orange'
     }
   ])
-
+  
+  const [warrantyInfo] = useState({
+    duration: '2 Years',
+    duration: '2 Years',
+    type: 'Comprehensive Warranty',
+    coverage: [
+      'Manufacturing defects',
+      'Electrical component failure',
+      'Free repair and replacement',
+      'On-site service available'
+    ],
+    exclusions: [
+      'Physical damage due to misuse',
+      'Water damage',
+      'Accidental damage'
+    ],
+    registrationRequired: true,
+    claimProcess: '1800-XXX-XXXX or visit service center'
+  })
   useEffect(() => {
     const loadProduct = async () => {
       setLoading(true)
@@ -95,10 +114,10 @@ const [quantity, setQuantity] = useState(1)
             : item
         )
         toast.success(`Updated ${product.name} quantity in cart`)
-        return updatedCart
+return updatedCart
       } else {
         toast.success(`${product.name} added to cart`)
-return [...prev, cartItem]
+        return [...prev, cartItem]
       }
     })
   }
@@ -194,10 +213,19 @@ return [...prev, cartItem]
     } finally {
       setCheckingDelivery(false)
     }
+}
+  
+  const handleWarrantyRegistration = () => {
+    if (warrantyRegistered) {
+      toast.info("Product warranty is already registered")
+      return
+    }
+    
+    setWarrantyRegistered(true)
+toast.success("Warranty registered successfully! Registration details sent to your email.")
   }
-
   const buyNow = () => {
-addToCart()
+    addToCart()
     toast.success("Proceeding to checkout...")
     // Navigate to checkout page (would be implemented)
   }
@@ -442,10 +470,10 @@ addToCart()
                     ))}
                     
                     <div className="text-center pt-2">
-                      <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">
+<button className="text-sm text-blue-600 hover:text-blue-800 font-medium">
                         View All Offers & Terms
                       </button>
-</div>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -541,6 +569,110 @@ addToCart()
                         </p>
                       </div>
                     )}
+</motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Warranty Information */}
+            <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-200">
+              <div 
+                className="flex items-center justify-between cursor-pointer"
+                onClick={() => setShowWarranty(!showWarranty)}
+              >
+                <div className="flex items-center space-x-2">
+                  <ApperIcon name="Shield" className="h-5 w-5 text-purple-600" />
+                  <h3 className="font-semibold text-gray-800">Warranty Information</h3>
+                  <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full font-medium">
+                    {warrantyInfo.duration}
+                  </span>
+                </div>
+                <motion.div
+                  animate={{ rotate: showWarranty ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ApperIcon name="ChevronDown" className="h-5 w-5 text-gray-600" />
+                </motion.div>
+              </div>
+
+              <AnimatePresence>
+                {showWarranty && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="mt-4 space-y-4"
+                  >
+                    <div className="bg-white rounded-lg p-4 border border-gray-200">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <h4 className="font-medium text-gray-800 mb-2">Warranty Coverage</h4>
+                          <ul className="space-y-1">
+                            {warrantyInfo.coverage.map((item, index) => (
+                              <li key={index} className="flex items-center space-x-2 text-sm">
+                                <ApperIcon name="CheckCircle" className="h-4 w-4 text-green-600" />
+                                <span className="text-gray-700">{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-medium text-gray-800 mb-2">Not Covered</h4>
+                          <ul className="space-y-1">
+                            {warrantyInfo.exclusions.map((item, index) => (
+                              <li key={index} className="flex items-center space-x-2 text-sm">
+                                <ApperIcon name="XCircle" className="h-4 w-4 text-red-600" />
+                                <span className="text-gray-700">{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                      
+                      <div className="border-t pt-4">
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <h4 className="font-medium text-gray-800">Warranty Registration</h4>
+                            <p className="text-sm text-gray-600">
+                              {warrantyRegistered ? 'Your product warranty is registered' : 'Register your product to activate warranty'}
+                            </p>
+                          </div>
+                          <button
+                            onClick={handleWarrantyRegistration}
+                            disabled={warrantyRegistered}
+                            className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center space-x-2 ${
+                              warrantyRegistered
+                                ? 'bg-green-100 text-green-800 cursor-not-allowed'
+                                : 'bg-purple-600 text-white hover:bg-purple-700'
+                            }`}
+                          >
+                            {warrantyRegistered ? (
+                              <>
+                                <ApperIcon name="CheckCircle" className="h-4 w-4" />
+                                <span>Registered</span>
+                              </>
+                            ) : (
+                              <>
+                                <ApperIcon name="Shield" className="h-4 w-4" />
+                                <span>Register Now</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                        
+                        <div className="bg-gray-50 rounded-lg p-3">
+                          <div className="flex items-start space-x-2">
+                            <ApperIcon name="Phone" className="h-4 w-4 text-blue-600 mt-0.5" />
+                            <div>
+                              <p className="text-sm font-medium text-gray-800">Warranty Claims</p>
+                              <p className="text-sm text-gray-600">{warrantyInfo.claimProcess}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
