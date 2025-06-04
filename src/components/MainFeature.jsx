@@ -8,12 +8,27 @@ const [sortBy, setSortBy] = useState('featured')
   const [priceRange, setPriceRange] = useState([0, 50000])
   const [selectedBrands, setSelectedBrands] = useState([])
   const [showFilters, setShowFilters] = useState(false)
-  const [minRating, setMinRating] = useState(0)
+const [minRating, setMinRating] = useState(0)
   const [availabilityFilter, setAvailabilityFilter] = useState('all')
   const [discountFilter, setDiscountFilter] = useState('all')
+  const [collapsedSections, setCollapsedSections] = useState({
+    price: false,
+    rating: false,
+    availability: false,
+    discount: false,
+    category: false,
+    brands: false
+  })
 
   // Get unique brands from products
   const brands = [...new Set(products?.map(product => product?.brand).filter(Boolean))] || []
+
+  const toggleSection = (section) => {
+    setCollapsedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }))
+  }
 
   // Filter and sort products
   const filteredProducts = products?.filter(product => {
@@ -235,204 +250,342 @@ return (
 
 {/* Price Range */}
               <div className="mb-6 pb-6 border-b border-gray-200">
-                <h4 className="font-medium mb-4 flex items-center">
-                  <ApperIcon name="DollarSign" className="h-4 w-4 mr-2 text-primary" />
-                  Price Range
-                </h4>
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-4">
-                    <input
-                      type="number"
-                      placeholder="Min"
-                      value={priceRange[0]}
-                      onChange={(e) => setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])}
-                      className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                    />
-                    <span className="text-gray-500">to</span>
-                    <input
-                      type="number"
-                      placeholder="Max"
-                      value={priceRange[1]}
-                      onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value) || 50000])}
-                      className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                    />
+                <button
+                  onClick={() => toggleSection('price')}
+                  className="w-full font-medium mb-4 flex items-center justify-between hover:text-primary transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center">
+                    <ApperIcon name="DollarSign" className="h-4 w-4 mr-2 text-primary" />
+                    Price Range
                   </div>
-                  <div className="text-sm text-gray-600">
-                    ₹{priceRange[0].toLocaleString()} - ₹{priceRange[1].toLocaleString()}
-                  </div>
-                </div>
-              </div>
-
-              {/* Rating Filter */}
-              <div className="mb-6 pb-6 border-b border-gray-200">
-                <h4 className="font-medium mb-4 flex items-center">
-                  <ApperIcon name="Star" className="h-4 w-4 mr-2 text-primary" />
-                  Minimum Rating
-                </h4>
-                <div className="space-y-3">
-                  {[4, 3, 2, 1, 0].map((rating) => (
-                    <label key={rating} className="flex items-center space-x-3 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="rating"
-                        checked={minRating === rating}
-                        onChange={() => setMinRating(rating)}
-                        className="w-4 h-4 text-primary border-gray-300 focus:ring-primary"
-                      />
-                      <div className="flex items-center space-x-2">
-                        <div className="flex">
-                          {[...Array(5)].map((_, i) => (
-                            <ApperIcon
-                              key={i}
-                              name="Star"
-                              className={`h-4 w-4 ${
-                                i < rating ? 'text-accent fill-accent' : 'text-gray-300'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        <span className="text-sm text-gray-700">
-                          {rating === 0 ? 'All Ratings' : `${rating}+ Stars`}
-                        </span>
-                      </div>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Availability Filter */}
-              <div className="mb-6 pb-6 border-b border-gray-200">
-                <h4 className="font-medium mb-4 flex items-center">
-                  <ApperIcon name="Package" className="h-4 w-4 mr-2 text-primary" />
-                  Availability
-                </h4>
-                <div className="space-y-3">
-                  {[
-                    { value: 'all', label: 'All Items' },
-                    { value: 'in-stock', label: 'In Stock Only' },
-                    { value: 'out-of-stock', label: 'Out of Stock Only' }
-                  ].map((option) => (
-                    <label key={option.value} className="flex items-center space-x-3 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="availability"
-                        checked={availabilityFilter === option.value}
-                        onChange={() => setAvailabilityFilter(option.value)}
-                        className="w-4 h-4 text-primary border-gray-300 focus:ring-primary"
-                      />
-                      <span className="text-sm text-gray-700">{option.label}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Discount Filter */}
-              <div className="mb-6 pb-6 border-b border-gray-200">
-                <h4 className="font-medium mb-4 flex items-center">
-                  <ApperIcon name="Percent" className="h-4 w-4 mr-2 text-primary" />
-                  Discount
-                </h4>
-                <div className="space-y-3">
-                  {[
-                    { value: 'all', label: 'All Items' },
-                    { value: 'discounted', label: 'Discounted Only' },
-                    { value: 'no-discount', label: 'No Discount' }
-                  ].map((option) => (
-                    <label key={option.value} className="flex items-center space-x-3 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="discount"
-                        checked={discountFilter === option.value}
-                        onChange={() => setDiscountFilter(option.value)}
-                        className="w-4 h-4 text-primary border-gray-300 focus:ring-primary"
-                      />
-                      <span className="text-sm text-gray-700">{option.label}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Category Specific Filters */}
-              <div className="mb-6 pb-6 border-b border-gray-200">
-                <h4 className="font-medium mb-4 flex items-center">
-                  <ApperIcon name="Settings" className="h-4 w-4 mr-2 text-primary" />
-                  Category Filters
-                </h4>
-                <div className="space-y-4">
-                  {/* Size Filter (for clothing/sports) */}
-                  <div>
-                    <h5 className="text-sm font-medium text-gray-700 mb-2">Size</h5>
-                    <div className="flex flex-wrap gap-2">
-                      {['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) => (
-                        <button
-                          key={size}
-                          className="px-3 py-1 text-xs border border-gray-300 rounded-md hover:border-primary hover:text-primary transition-colors"
-                        >
-                          {size}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {/* Color Filter */}
-                  <div>
-                    <h5 className="text-sm font-medium text-gray-700 mb-2">Color</h5>
-                    <div className="flex flex-wrap gap-2">
-                      {[
-                        { name: 'Black', class: 'bg-black' },
-                        { name: 'White', class: 'bg-white border' },
-                        { name: 'Red', class: 'bg-red-500' },
-                        { name: 'Blue', class: 'bg-blue-500' },
-                        { name: 'Green', class: 'bg-green-500' },
-                        { name: 'Gray', class: 'bg-gray-500' }
-                      ].map((color) => (
-                        <button
-                          key={color.name}
-                          className={`w-8 h-8 rounded-full ${color.class} hover:ring-2 hover:ring-primary transition-all`}
-                          title={color.name}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {/* Material Filter */}
-                  <div>
-                    <h5 className="text-sm font-medium text-gray-700 mb-2">Material</h5>
-                    <div className="space-y-2">
-                      {['Cotton', 'Leather', 'Synthetic', 'Wool', 'Denim'].map((material) => (
-                        <label key={material} className="flex items-center space-x-2 cursor-pointer">
+                  <motion.div
+                    animate={{ rotate: collapsedSections.price ? 0 : 180 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ApperIcon name="ChevronDown" className="h-4 w-4" />
+                  </motion.div>
+                </button>
+                <AnimatePresence>
+                  {!collapsedSections.price && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="space-y-4">
+                        <div className="flex items-center space-x-4">
                           <input
-                            type="checkbox"
-                            className="w-3 h-3 text-primary border-gray-300 rounded focus:ring-primary"
+                            type="number"
+                            placeholder="Min"
+                            value={priceRange[0]}
+                            onChange={(e) => setPriceRange([parseInt(e.target.value) || 0, priceRange[1]])}
+                            className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                           />
-                          <span className="text-xs text-gray-700">{material}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                          <span className="text-gray-500">to</span>
+                          <input
+                            type="number"
+                            placeholder="Max"
+                            value={priceRange[1]}
+                            onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value) || 50000])}
+                            className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                          />
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          ₹{priceRange[0].toLocaleString()} - ₹{priceRange[1].toLocaleString()}
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
-              {/* Brands */}
+{/* Rating Filter */}
+              <div className="mb-6 pb-6 border-b border-gray-200">
+                <button
+                  onClick={() => toggleSection('rating')}
+                  className="w-full font-medium mb-4 flex items-center justify-between hover:text-primary transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center">
+                    <ApperIcon name="Star" className="h-4 w-4 mr-2 text-primary" />
+                    Minimum Rating
+                  </div>
+                  <motion.div
+                    animate={{ rotate: collapsedSections.rating ? 0 : 180 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ApperIcon name="ChevronDown" className="h-4 w-4" />
+                  </motion.div>
+                </button>
+                <AnimatePresence>
+                  {!collapsedSections.rating && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="space-y-3">
+                        {[4, 3, 2, 1, 0].map((rating) => (
+                          <label key={rating} className="flex items-center space-x-3 cursor-pointer">
+                            <input
+                              type="radio"
+                              name="rating"
+                              checked={minRating === rating}
+                              onChange={() => setMinRating(rating)}
+                              className="w-4 h-4 text-primary border-gray-300 focus:ring-primary"
+                            />
+                            <div className="flex items-center space-x-2">
+                              <div className="flex">
+                                {[...Array(5)].map((_, i) => (
+                                  <ApperIcon
+                                    key={i}
+                                    name="Star"
+                                    className={`h-4 w-4 ${
+                                      i < rating ? 'text-accent fill-accent' : 'text-gray-300'
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                              <span className="text-sm text-gray-700">
+                                {rating === 0 ? 'All Ratings' : `${rating}+ Stars`}
+                              </span>
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+{/* Availability Filter */}
+              <div className="mb-6 pb-6 border-b border-gray-200">
+                <button
+                  onClick={() => toggleSection('availability')}
+                  className="w-full font-medium mb-4 flex items-center justify-between hover:text-primary transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center">
+                    <ApperIcon name="Package" className="h-4 w-4 mr-2 text-primary" />
+                    Availability
+                  </div>
+                  <motion.div
+                    animate={{ rotate: collapsedSections.availability ? 0 : 180 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ApperIcon name="ChevronDown" className="h-4 w-4" />
+                  </motion.div>
+                </button>
+                <AnimatePresence>
+                  {!collapsedSections.availability && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="space-y-3">
+                        {[
+                          { value: 'all', label: 'All Items' },
+                          { value: 'in-stock', label: 'In Stock Only' },
+                          { value: 'out-of-stock', label: 'Out of Stock Only' }
+                        ].map((option) => (
+                          <label key={option.value} className="flex items-center space-x-3 cursor-pointer">
+                            <input
+                              type="radio"
+                              name="availability"
+                              checked={availabilityFilter === option.value}
+                              onChange={() => setAvailabilityFilter(option.value)}
+                              className="w-4 h-4 text-primary border-gray-300 focus:ring-primary"
+                            />
+                            <span className="text-sm text-gray-700">{option.label}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+{/* Discount Filter */}
+              <div className="mb-6 pb-6 border-b border-gray-200">
+                <button
+                  onClick={() => toggleSection('discount')}
+                  className="w-full font-medium mb-4 flex items-center justify-between hover:text-primary transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center">
+                    <ApperIcon name="Percent" className="h-4 w-4 mr-2 text-primary" />
+                    Discount
+                  </div>
+                  <motion.div
+                    animate={{ rotate: collapsedSections.discount ? 0 : 180 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ApperIcon name="ChevronDown" className="h-4 w-4" />
+                  </motion.div>
+                </button>
+                <AnimatePresence>
+                  {!collapsedSections.discount && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="space-y-3">
+                        {[
+                          { value: 'all', label: 'All Items' },
+                          { value: 'discounted', label: 'Discounted Only' },
+                          { value: 'no-discount', label: 'No Discount' }
+                        ].map((option) => (
+                          <label key={option.value} className="flex items-center space-x-3 cursor-pointer">
+                            <input
+                              type="radio"
+                              name="discount"
+                              checked={discountFilter === option.value}
+                              onChange={() => setDiscountFilter(option.value)}
+                              className="w-4 h-4 text-primary border-gray-300 focus:ring-primary"
+                            />
+                            <span className="text-sm text-gray-700">{option.label}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+{/* Category Specific Filters */}
+              <div className="mb-6 pb-6 border-b border-gray-200">
+                <button
+                  onClick={() => toggleSection('category')}
+                  className="w-full font-medium mb-4 flex items-center justify-between hover:text-primary transition-colors cursor-pointer"
+                >
+                  <div className="flex items-center">
+                    <ApperIcon name="Settings" className="h-4 w-4 mr-2 text-primary" />
+                    Category Filters
+                  </div>
+                  <motion.div
+                    animate={{ rotate: collapsedSections.category ? 0 : 180 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ApperIcon name="ChevronDown" className="h-4 w-4" />
+                  </motion.div>
+                </button>
+                <AnimatePresence>
+                  {!collapsedSections.category && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="space-y-4">
+                        {/* Size Filter (for clothing/sports) */}
+                        <div>
+                          <h5 className="text-sm font-medium text-gray-700 mb-2">Size</h5>
+                          <div className="flex flex-wrap gap-2">
+                            {['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) => (
+                              <button
+                                key={size}
+                                className="px-3 py-1 text-xs border border-gray-300 rounded-md hover:border-primary hover:text-primary transition-colors"
+                              >
+                                {size}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        {/* Color Filter */}
+                        <div>
+                          <h5 className="text-sm font-medium text-gray-700 mb-2">Color</h5>
+                          <div className="flex flex-wrap gap-2">
+                            {[
+                              { name: 'Black', class: 'bg-black' },
+                              { name: 'White', class: 'bg-white border' },
+                              { name: 'Red', class: 'bg-red-500' },
+                              { name: 'Blue', class: 'bg-blue-500' },
+                              { name: 'Green', class: 'bg-green-500' },
+                              { name: 'Gray', class: 'bg-gray-500' }
+                            ].map((color) => (
+                              <button
+                                key={color.name}
+                                className={`w-8 h-8 rounded-full ${color.class} hover:ring-2 hover:ring-primary transition-all`}
+                                title={color.name}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                        
+                        {/* Material Filter */}
+                        <div>
+                          <h5 className="text-sm font-medium text-gray-700 mb-2">Material</h5>
+                          <div className="space-y-2">
+                            {['Cotton', 'Leather', 'Synthetic', 'Wool', 'Denim'].map((material) => (
+                              <label key={material} className="flex items-center space-x-2 cursor-pointer">
+                                <input
+                                  type="checkbox"
+                                  className="w-3 h-3 text-primary border-gray-300 rounded focus:ring-primary"
+                                />
+                                <span className="text-xs text-gray-700">{material}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+{/* Brands */}
               {brands.length > 0 && (
                 <div className="mb-6">
-                  <h4 className="font-medium mb-4 flex items-center">
-                    <ApperIcon name="Tag" className="h-4 w-4 mr-2 text-primary" />
-                    Brands
-                  </h4>
-                  <div className="space-y-2 max-h-48 overflow-y-auto">
-                    {brands.map((brand) => (
-                      <label key={brand} className="flex items-center space-x-3 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={selectedBrands.includes(brand)}
-                          onChange={() => toggleBrand(brand)}
-                          className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
-                        />
-                        <span className="text-sm text-gray-700">{brand}</span>
-                      </label>
-                    ))}
-                  </div>
+                  <button
+                    onClick={() => toggleSection('brands')}
+                    className="w-full font-medium mb-4 flex items-center justify-between hover:text-primary transition-colors cursor-pointer"
+                  >
+                    <div className="flex items-center">
+                      <ApperIcon name="Tag" className="h-4 w-4 mr-2 text-primary" />
+                      Brands
+                    </div>
+                    <motion.div
+                      animate={{ rotate: collapsedSections.brands ? 0 : 180 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ApperIcon name="ChevronDown" className="h-4 w-4" />
+                    </motion.div>
+                  </button>
+                  <AnimatePresence>
+                    {!collapsedSections.brands && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="space-y-2 max-h-48 overflow-y-auto">
+                          {brands.map((brand) => (
+                            <label key={brand} className="flex items-center space-x-3 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={selectedBrands.includes(brand)}
+                                onChange={() => toggleBrand(brand)}
+                                className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                              />
+                              <span className="text-sm text-gray-700">{brand}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               )}
             </motion.div>
