@@ -12,9 +12,12 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 const [selectedImage, setSelectedImage] = useState(0)
-  const [quantity, setQuantity] = useState(1)
+const [quantity, setQuantity] = useState(1)
   const [activeTab, setActiveTab] = useState('description')
   const [showOffers, setShowOffers] = useState(false)
+  const [deliveryCode, setDeliveryCode] = useState('')
+  const [deliveryInfo, setDeliveryInfo] = useState(null)
+  const [checkingDelivery, setCheckingDelivery] = useState(false)
   const [cart, setCart] = useState([])
   const [relatedProducts, setRelatedProducts] = useState([])
   const [offers] = useState([
@@ -95,13 +98,106 @@ const [selectedImage, setSelectedImage] = useState(0)
         return updatedCart
       } else {
         toast.success(`${product.name} added to cart`)
-        return [...prev, cartItem]
+return [...prev, cartItem]
       }
     })
   }
 
+  const handleDeliveryCheck = async () => {
+    if (!deliveryCode.trim()) {
+      toast.error("Please enter a valid delivery code")
+      return
+    }
+
+    if (deliveryCode.length < 5) {
+      toast.error("Please enter a valid postal code")
+      return
+    }
+
+    setCheckingDelivery(true)
+    
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      // Mock delivery logic based on postal code
+      const firstDigit = deliveryCode.charAt(0)
+      let deliveryOptions = []
+      
+      if (['1', '2', '3'].includes(firstDigit)) {
+        // Metro cities - faster delivery
+        deliveryOptions = [
+          {
+            type: 'Same Day',
+            date: 'Today, by 10 PM',
+            charge: '₹99',
+            available: true
+          },
+          {
+            type: 'Next Day',
+            date: 'Tomorrow, by 6 PM',
+            charge: 'FREE',
+            available: true
+          }
+        ]
+      } else if (['4', '5', '6'].includes(firstDigit)) {
+        // Tier 2 cities
+        deliveryOptions = [
+          {
+            type: 'Express',
+            date: 'Tomorrow, by 8 PM',
+            charge: '₹49',
+            available: true
+          },
+          {
+            type: 'Standard',
+            date: '2-3 business days',
+            charge: 'FREE',
+            available: true
+          }
+        ]
+      } else if (['7', '8', '9'].includes(firstDigit)) {
+        // Tier 3 cities and rural areas
+        deliveryOptions = [
+          {
+            type: 'Standard',
+            date: '3-5 business days',
+            charge: 'FREE',
+            available: true
+          },
+          {
+            type: 'Express',
+            date: '2-3 business days',
+            charge: '₹79',
+            available: true
+          }
+        ]
+      } else {
+        // Invalid or non-serviceable area
+        setDeliveryInfo({ serviceable: false })
+        toast.error("Sorry, we don't deliver to this area yet")
+        setCheckingDelivery(false)
+        return
+      }
+
+      setDeliveryInfo({
+        serviceable: true,
+        pincode: deliveryCode,
+        options: deliveryOptions
+      })
+      
+      toast.success("Delivery options found!")
+      
+    } catch (error) {
+      toast.error("Failed to check delivery. Please try again.")
+      setDeliveryInfo(null)
+    } finally {
+      setCheckingDelivery(false)
+    }
+  }
+
   const buyNow = () => {
-    addToCart()
+addToCart()
     toast.success("Proceeding to checkout...")
     // Navigate to checkout page (would be implemented)
   }
@@ -273,10 +369,10 @@ const [selectedImage, setSelectedImage] = useState(0)
                       {discount}% OFF
                     </span>
                   </>
-                )}
+)}
               </div>
               <p className="text-green-600 text-sm font-medium">Inclusive of all taxes</p>
-</div>
+            </div>
 
             {/* Available Offers */}
             <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-4 border border-green-200">
@@ -349,7 +445,102 @@ const [selectedImage, setSelectedImage] = useState(0)
                       <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">
                         View All Offers & Terms
                       </button>
-                    </div>
+</div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Delivery Information */}
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 border border-blue-200">
+              <div className="flex items-center space-x-2 mb-3">
+                <ApperIcon name="Truck" className="h-5 w-5 text-blue-600" />
+                <h3 className="font-semibold text-gray-800">Delivery Information</h3>
+              </div>
+              
+              <div className="flex space-x-2 mb-3">
+                <input
+                  type="text"
+                  value={deliveryCode}
+                  onChange={(e) => setDeliveryCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  placeholder="Enter PIN Code"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+                <button
+                  onClick={handleDeliveryCheck}
+                  disabled={checkingDelivery || !deliveryCode.trim()}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium transition-colors flex items-center space-x-2"
+                >
+                  {checkingDelivery ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      <span>Checking...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ApperIcon name="Search" className="h-4 w-4" />
+                      <span>Check</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              <AnimatePresence>
+                {deliveryInfo && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden"
+                  >
+                    {deliveryInfo.serviceable ? (
+                      <div className="bg-white rounded-lg p-3 border border-gray-200">
+                        <div className="flex items-center space-x-2 mb-3">
+                          <ApperIcon name="CheckCircle" className="h-4 w-4 text-green-600" />
+                          <span className="text-sm font-medium text-green-700">
+                            Delivery available to {deliveryInfo.pincode}
+                          </span>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          {deliveryInfo.options.map((option, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center justify-between p-2 bg-gray-50 rounded border"
+                            >
+                              <div>
+                                <span className="font-medium text-gray-800">{option.type} Delivery</span>
+                                <p className="text-sm text-gray-600">{option.date}</p>
+                              </div>
+                              <div className="text-right">
+                                <span className={`font-semibold ${
+                                  option.charge === 'FREE' ? 'text-green-600' : 'text-gray-800'
+                                }`}>
+                                  {option.charge}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <div className="mt-3 text-xs text-gray-500">
+                          * Delivery charges may vary based on product weight and dimensions
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="bg-red-50 rounded-lg p-3 border border-red-200">
+                        <div className="flex items-center space-x-2">
+                          <ApperIcon name="XCircle" className="h-4 w-4 text-red-600" />
+                          <span className="text-sm font-medium text-red-700">
+                            Sorry, delivery not available to this area
+                          </span>
+                        </div>
+                        <p className="text-xs text-red-600 mt-1">
+                          Please check with a different PIN code or contact support
+                        </p>
+                      </div>
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>
