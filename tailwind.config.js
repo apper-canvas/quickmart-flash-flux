@@ -4,9 +4,9 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  theme: {
+theme: {
     extend: {
-colors: {
+      colors: {
         primary: {
           DEFAULT: '#E74C3C',
           light: '#EC7063',
@@ -70,9 +70,9 @@ colors: {
         'xl': '23px',
         '2xl': '28px',
         '3xl': '33px',
-        '4xl': '40px'
+'4xl': '40px'
       },
-spacing: {
+      spacing: {
         '18': '4.5rem',
         '88': '22rem'
       },
@@ -81,7 +81,7 @@ spacing: {
         'slide-up': 'slideUp 0.3s ease-out',
         'bounce-gentle': 'bounceGentle 0.6s ease-out',
         'card-flip': 'cardFlip 0.6s ease-in-out',
-        'payment-pulse': 'paymentPulse 2s ease-in-out infinite',
+'payment-pulse': 'paymentPulse 2s ease-in-out infinite',
         'secure-glow': 'secureGlow 1.5s ease-in-out infinite alternate',
         'cart-bounce': 'cartBounce 0.6s ease-out',
         'cart-item-add': 'cartItemAdd 0.4s ease-out',
@@ -112,12 +112,36 @@ spacing: {
           '0%, 100%': { transform: 'scale(1)', opacity: '1' },
           '50%': { transform: 'scale(1.05)', opacity: '0.8' }
         },
-secureGlow: {
+        secureGlow: {
           '0%': { boxShadow: '0 0 5px rgba(34, 197, 94, 0.3)' },
           '100%': { boxShadow: '0 0 20px rgba(34, 197, 94, 0.6)' }
+        },
+        cartBounce: {
+          '0%, 20%, 50%, 80%, 100%': { transform: 'translateY(0) scale(1)' },
+          '40%': { transform: 'translateY(-5px) scale(1.05)' },
+          '60%': { transform: 'translateY(-3px) scale(1.02)' }
+        },
+        cartItemAdd: {
+          '0%': { transform: 'translateX(-20px)', opacity: '0' },
+          '50%': { transform: 'translateX(5px)', opacity: '0.8' },
+          '100%': { transform: 'translateX(0)', opacity: '1' }
+        },
+        cartNotification: {
+          '0%': { transform: 'scale(0.8)', opacity: '0' },
+          '50%': { transform: 'scale(1.1)', opacity: '0.9' },
+          '100%': { transform: 'scale(1)', opacity: '1' }
+        },
+        cartSlideIn: {
+          '0%': { transform: 'translateX(100%)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' }
+        },
+        cartCountPulse: {
+          '0%': { transform: 'scale(1)' },
+'50%': { transform: 'scale(1.2)' },
+          '100%': { transform: 'scale(1)' }
         }
       }
-    },
+    }
   },
   plugins: [],
   darkMode: 'class',
