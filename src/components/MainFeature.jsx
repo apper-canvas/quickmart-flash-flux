@@ -7,9 +7,9 @@ const MainFeature = ({ products = [], loading = false, onAddToCart, onProductCli
   const [sortBy, setSortBy] = useState('featured')
   const [viewMode, setViewMode] = useState('grid')
   const [priceRange, setPriceRange] = useState([0, 50000])
-  const [selectedBrands, setSelectedBrands] = useState([])
+const [selectedBrands, setSelectedBrands] = useState([])
   const [showFilters, setShowFilters] = useState(false)
-const [minRating, setMinRating] = useState(0)
+  const [minRating, setMinRating] = useState(0)
   const [availabilityFilter, setAvailabilityFilter] = useState('all')
   const [discountFilter, setDiscountFilter] = useState('all')
   const [collapsedSections, setCollapsedSections] = useState({
@@ -84,9 +84,10 @@ const [minRating, setMinRating] = useState(0)
     const [isWishlisted, setIsWishlisted] = useState(false)
     
     const discountPercentage = product?.price && product?.discountedPrice 
-      ? Math.round(((product.price - product.discountedPrice) / product.price) * 100)
+? Math.round(((product.price - product.discountedPrice) / product.price) * 100)
       : 0
-return (
+    
+    return (
       <motion.div
         layout
         initial={{ opacity: 0, scale: 0.9 }}
@@ -226,9 +227,9 @@ return (
             {sortedProducts.length} {sortedProducts.length === 1 ? 'product' : 'products'}
           </span>
         </div>
-      </div>
+</div>
 
-<div className="flex gap-6">
+      <div className="flex gap-6">
         {/* Filters Sidebar */}
         <AnimatePresence>
           {(showFilters || (typeof window !== 'undefined' && window.innerWidth >= 1024)) && (
@@ -247,9 +248,9 @@ return (
                 >
                   Clear All
                 </button>
-              </div>
+</div>
 
-{/* Price Range */}
+              {/* Price Range */}
               <div className="mb-6 pb-6 border-b border-gray-200">
                 <button
                   onClick={() => toggleSection('price')}
@@ -300,9 +301,9 @@ return (
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+</div>
 
-{/* Rating Filter */}
+              {/* Rating Filter */}
               <div className="mb-6 pb-6 border-b border-gray-200">
                 <button
                   onClick={() => toggleSection('rating')}
@@ -360,9 +361,9 @@ return (
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+</div>
 
-{/* Availability Filter */}
+              {/* Availability Filter */}
               <div className="mb-6 pb-6 border-b border-gray-200">
                 <button
                   onClick={() => toggleSection('availability')}
@@ -409,9 +410,9 @@ return (
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+</div>
 
-{/* Discount Filter */}
+              {/* Discount Filter */}
               <div className="mb-6 pb-6 border-b border-gray-200">
                 <button
                   onClick={() => toggleSection('discount')}
@@ -458,9 +459,9 @@ return (
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+</div>
 
-{/* Category Specific Filters */}
+              {/* Category Specific Filters */}
               <div className="mb-6 pb-6 border-b border-gray-200">
                 <button
                   onClick={() => toggleSection('category')}
@@ -542,9 +543,9 @@ return (
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+</div>
 
-{/* Brands */}
+              {/* Brands */}
               {brands.length > 0 && (
                 <div className="mb-6">
                   <button
@@ -612,9 +613,9 @@ return (
                 {sortedProducts.map((product) => (
                   <ProductCard key={product?.id} product={product} />
                 ))}
-              </AnimatePresence>
+</AnimatePresence>
             </motion.div>
-) : (
+          ) : (
             <div className="space-y-4">
               <AnimatePresence>
                 {sortedProducts.map((product) => {
@@ -670,7 +671,7 @@ return (
                             disabled={(product?.stock || 0) === 0}
                             className="bg-primary hover:bg-primary-dark disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2"
                           >
-                            <ApperIcon name="ShoppingCart" className="h-5 w-5" />
+<ApperIcon name="ShoppingCart" className="h-5 w-5" />
                             <span>{(product?.stock || 0) === 0 ? 'Out of Stock' : 'Add to Cart'}</span>
                           </button>
                         </div>
