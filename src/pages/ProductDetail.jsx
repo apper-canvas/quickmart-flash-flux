@@ -59,9 +59,9 @@ const [showWarranty, setShowWarranty] = useState(false)
       color: 'purple'
     },
     {
-      type: 'exchange',
+type: 'exchange',
       title: 'Exchange Offer',
-description: 'Up to ₹5000 off on exchange of old products',
+      description: 'Up to ₹5000 off on exchange of old products',
       code: 'EXCHANGE',
       savings: '₹5000',
       icon: 'RefreshCw',
@@ -81,13 +81,13 @@ const [warrantyInfo] = useState({
       'Physical damage due to misuse',
       'Water damage',
       'Accidental damage'
-    ],
+],
     registrationRequired: true,
-claimProcess: '1800-XXX-XXXX or visit service center'
+    claimProcess: '1800-XXX-XXXX or visit service center'
   })
 
+  const [sizeChartAvailable, setSizeChartAvailable] = useState(false)
   const [sizeChart] = useState({
-    available: ['clothing', 'sports', 'shoes'].includes(product?.category),
     sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
     measurements: {
       'XS': { chest: '32-34', waist: '26-28', hip: '34-36', length: '26' },
@@ -117,6 +117,7 @@ claimProcess: '1800-XXX-XXXX or visit service center'
     setSelectedSize(size)
     toast.success(`Size ${size} selected`)
   }
+  
   useEffect(() => {
     const loadProduct = async () => {
       setLoading(true)
@@ -133,13 +134,12 @@ claimProcess: '1800-XXX-XXXX or visit service center'
       } finally {
         setLoading(false)
       }
-    }
+}
     
-if (id) {
+    if (id) {
       loadProduct()
     }
   }, [id])
-
   // Load rating statistics
   useEffect(() => {
     const loadRatingStats = async () => {
@@ -150,11 +150,19 @@ if (id) {
         setRatingStats(stats)
       } catch (err) {
         console.error('Failed to load rating stats:', err)
-      }
+}
     }
     
     loadRatingStats()
   }, [id])
+
+  // Update size chart availability when product loads
+  useEffect(() => {
+    if (product) {
+      setSizeChartAvailable(['clothing', 'sports', 'shoes'].includes(product.category))
+    }
+  }, [product])
+
   const addToCart = () => {
     if (!product) return
     
@@ -163,9 +171,9 @@ if (id) {
       const existingItem = prev.find(item => item.id === product.id)
       if (existingItem) {
         const updatedCart = prev.map(item =>
-          item.id === product.id 
+item.id === product.id 
             ? { ...item, quantity: item.quantity + quantity }
-: item
+            : item
         )
         toast.success(`Updated ${product.name} quantity in cart`)
         return updatedCart
@@ -270,10 +278,10 @@ if (id) {
 }
   
   const handleWarrantyRegistration = () => {
-    if (warrantyRegistered) {
+if (warrantyRegistered) {
       toast.info("Product warranty is already registered")
-return
-}
+      return
+    }
     
     setWarrantyRegistered(true)
     toast.success("Warranty registered successfully! Registration details sent to your email.")
@@ -496,9 +504,9 @@ return
                 <span className="text-3xl font-bold text-primary">₹{product.discountedPrice || product.price}</span>
                 {product.originalPrice && (
                   <>
-                    <span className="text-xl text-gray-500 line-through">₹{product.originalPrice}</span>
+<span className="text-xl text-gray-500 line-through">₹{product.originalPrice}</span>
                     <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium">
-{discount}% OFF
+                      {discount}% OFF
                     </span>
                   </>
                 )}
@@ -569,9 +577,9 @@ return
                               </button>
                             </div>
                           </div>
-                        </div>
+</div>
                       </motion.div>
-))}
+                    ))}
                     
                     <div className="text-center pt-2">
                       <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">
@@ -668,9 +676,9 @@ return
                             Sorry, delivery not available to this area
                           </span>
                         </div>
-                        <p className="text-xs text-red-600 mt-1">
+<p className="text-xs text-red-600 mt-1">
                           Please check with a different PIN code or contact support
-</p>
+                        </p>
                       </div>
                     )}
                   </motion.div>
@@ -778,14 +786,14 @@ return
                       </div>
                     </div>
                   </motion.div>
-                )}
+)}
               </AnimatePresence>
-</div>
+            </div>
 
             {/* Size Chart */}
-            {sizeChart.available && (
+            {sizeChartAvailable && (
               <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4 border border-indigo-200">
-                <div 
+                <div
                   className="flex items-center justify-between cursor-pointer"
                   onClick={() => setShowSizeChart(!showSizeChart)}
                 >
@@ -947,21 +955,20 @@ return
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
+</div>
             )}
-{/* Quantity and Size Selector */}
+
+            {/* Quantity and Size Selector */}
             <div className="space-y-4">
               {/* Size Selection Summary */}
-              {sizeChart.available && selectedSize && (
-                <div className="bg-green-50 rounded-lg p-3 border border-green-200">
+              {sizeChartAvailable && selectedSize && (
                   <div className="flex items-center space-x-2">
                     <ApperIcon name="CheckCircle" className="h-4 w-4 text-green-600" />
                     <span className="text-sm font-medium text-green-700">
                       Selected Size: <strong>{selectedSize}</strong>
-                    </span>
+</span>
                   </div>
-                </div>
-              )}
+                )}
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">Quantity:</label>
@@ -1092,9 +1099,10 @@ return
                           <span className="font-medium text-gray-700">SKU:</span>
                           <span className="text-gray-600">{product.id}</span>
                         </div>
+</div>
                       </div>
                     </div>
-)}
+                  )}
                 </div>
               )}
 
@@ -1331,13 +1339,12 @@ return
                         Write First Review
                       </button>
                     </div>
-                  )}
-                </div>
 )}
+                </div>
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
-
         {/* Related Products */}
         {relatedProducts.length > 0 && (
           <div className="bg-white rounded-2xl shadow-lg p-6">
