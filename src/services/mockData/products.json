@@ -291,11 +291,12 @@
     "price": 1999,
     "discountedPrice": 1299,
     "images": [
-      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400",
-      "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400"
+"https://images.unsplash.com/photo-1509631179647-0177331693ae?w=400"
     ],
-    "category": "clothing",
+    "category": "fashion",
+    "subcategory": "womens-clothing",
     "brand": "H&M",
+    "ratings": 4.2,
     "ratings": 4.2,
     "stock": 37,
     "seller": {

@@ -82,11 +82,9 @@ const [selectedBrands, setSelectedBrands] = useState([])
 
   const ProductCard = ({ product }) => {
     const [isWishlisted, setIsWishlisted] = useState(false)
-    
-    const discountPercentage = product?.price && product?.discountedPrice 
-? Math.round(((product.price - product.discountedPrice) / product.price) * 100)
+const discountPercentage = product?.price && product?.discountedPrice 
+      ? Math.round(((product.price - product.discountedPrice) / product.price) * 100)
       : 0
-    
     return (
       <motion.div
         layout

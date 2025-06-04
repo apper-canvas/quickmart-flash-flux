@@ -130,9 +130,9 @@ theme: {
           '0%': { transform: 'scale(0.8)', opacity: '0' },
           '50%': { transform: 'scale(1.1)', opacity: '0.9' },
           '100%': { transform: 'scale(1)', opacity: '1' }
-        },
+},
         cartSlideIn: {
-'0%': { transform: 'translateX(100%)', opacity: '0' },
+          '0%': { transform: 'translateX(100%)', opacity: '0' },
           '100%': { transform: 'translateX(0)', opacity: '1' }
         },
         cartCountPulse: {

@@ -1,8 +1,9 @@
-export { default as productService } from './api/productService.js'
-export { default as userService } from './api/userService.js'
-export { default as orderService } from './api/orderService.js'
+export { default as productService } from './api/productService'
+export { default as orderService } from './api/orderService'
+export { default as userService } from './api/userService'
+export { default as categoryService } from './api/categoryService'
 
-// Cart utilities
+// Import and re-export all services for easy access
 export const cartUtils = {
   getStoredCart: () => {
     try {

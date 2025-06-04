@@ -387,18 +387,20 @@
 }
 
 /* Responsive Payment Styles */
+/* Responsive Payment Styles */
 @media (max-width: 768px) {
   .card-form-container {
     padding: 1.5rem;
   }
   
   .upi-interface {
-padding: 1.5rem;
+    padding: 1.5rem;
   }
   
   .upi-app-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+  
   .payment-method-card {
     padding: 0.875rem;
   }
@@ -414,7 +416,6 @@ padding: 1.5rem;
     grid-template-columns: repeat(2, 1fr);
   }
 }
-
 /* Cart Specific Styles */
 .cart-item {
   transition: all 0.3s ease;
@@ -676,7 +677,7 @@ padding: 1.5rem;
     font-size: 0.75rem;
   }
   
-  .cart-color-option {
+.cart-color-option {
     width: 1.25rem;
     height: 1.25rem;
   }

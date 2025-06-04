@@ -1,0 +1,541 @@
+[
+  {
+    "id": "fashion",
+    "name": "Fashion",
+    "description": "Clothing, footwear, and fashion accessories for all",
+    "icon": "Shirt",
+    "isActive": true,
+    "sortOrder": 1,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "mens-clothing",
+    "name": "Men's Clothing",
+    "description": "Stylish clothing for men including shirts, pants, and suits",
+    "icon": "User",
+    "parentId": "fashion",
+    "isActive": true,
+    "sortOrder": 1,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "womens-clothing",
+    "name": "Women's Clothing",
+    "description": "Trendy fashion for women including dresses, tops, and bottoms",
+    "icon": "Users",
+    "parentId": "fashion",
+    "isActive": true,
+    "sortOrder": 2,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "kids-baby",
+    "name": "Kids & Baby",
+    "description": "Comfortable and cute clothing for children and babies",
+    "icon": "Baby",
+    "parentId": "fashion",
+    "isActive": true,
+    "sortOrder": 3,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "footwear",
+    "name": "Footwear",
+    "description": "Shoes, sneakers, sandals, and boots for all occasions",
+    "icon": "ShoppingBag",
+    "parentId": "fashion",
+    "isActive": true,
+    "sortOrder": 4,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "accessories",
+    "name": "Accessories",
+    "description": "Bags, belts, jewelry, and fashion accessories",
+    "icon": "Gem",
+    "parentId": "fashion",
+    "isActive": true,
+    "sortOrder": 5,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "home-appliances",
+    "name": "Home & Appliances",
+    "description": "Essential appliances and home improvement items",
+    "icon": "Home",
+    "isActive": true,
+    "sortOrder": 2,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "kitchen-appliances",
+    "name": "Kitchen Appliances",
+    "description": "Cooking and kitchen equipment for modern homes",
+    "icon": "ChefHat",
+    "parentId": "home-appliances",
+    "isActive": true,
+    "sortOrder": 1,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "living-room",
+    "name": "Living Room",
+    "description": "Entertainment systems, lighting, and living room essentials",
+    "icon": "Tv",
+    "parentId": "home-appliances",
+    "isActive": true,
+    "sortOrder": 2,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "bedroom",
+    "name": "Bedroom",
+    "description": "Bedroom appliances, lighting, and comfort items",
+    "icon": "Moon",
+    "parentId": "home-appliances",
+    "isActive": true,
+    "sortOrder": 3,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "bathroom",
+    "name": "Bathroom",
+    "description": "Bathroom fixtures, accessories, and personal care appliances",
+    "icon": "Droplets",
+    "parentId": "home-appliances",
+    "isActive": true,
+    "sortOrder": 4,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "home-decor",
+    "name": "Home Decor",
+    "description": "Decorative items, art, and home styling accessories",
+    "icon": "Palette",
+    "parentId": "home-appliances",
+    "isActive": true,
+    "sortOrder": 5,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "furniture",
+    "name": "Furniture",
+    "description": "Quality furniture for every room in your home",
+    "icon": "Sofa",
+    "isActive": true,
+    "sortOrder": 3,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "seating",
+    "name": "Seating",
+    "description": "Chairs, sofas, recliners, and seating solutions",
+    "icon": "Armchair",
+    "parentId": "furniture",
+    "isActive": true,
+    "sortOrder": 1,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "storage",
+    "name": "Storage",
+    "description": "Wardrobes, cabinets, shelves, and storage solutions",
+    "icon": "Archive",
+    "parentId": "furniture",
+    "isActive": true,
+    "sortOrder": 2,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "tables",
+    "name": "Tables",
+    "description": "Dining tables, coffee tables, and work desks",
+    "icon": "Table",
+    "parentId": "furniture",
+    "isActive": true,
+    "sortOrder": 3,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "bed-furniture",
+    "name": "Beds & Mattresses",
+    "description": "Comfortable beds, mattresses, and bedroom furniture",
+    "icon": "Bed",
+    "parentId": "furniture",
+    "isActive": true,
+    "sortOrder": 4,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "electronics",
+    "name": "Electronics",
+    "description": "Latest gadgets, smartphones, computers, and electronic devices",
+    "icon": "Smartphone",
+    "isActive": true,
+    "sortOrder": 4,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "smartphones",
+    "name": "Smartphones",
+    "description": "Latest smartphones and mobile accessories",
+    "icon": "Phone",
+    "parentId": "electronics",
+    "isActive": true,
+    "sortOrder": 1,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "computers",
+    "name": "Computers & Laptops",
+    "description": "Desktop computers, laptops, and computer accessories",
+    "icon": "Laptop",
+    "parentId": "electronics",
+    "isActive": true,
+    "sortOrder": 2,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "audio-video",
+    "name": "Audio & Video",
+    "description": "Headphones, speakers, cameras, and entertainment devices",
+    "icon": "Headphones",
+    "parentId": "electronics",
+    "isActive": true,
+    "sortOrder": 3,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "gaming",
+    "name": "Gaming",
+    "description": "Gaming consoles, video games, and gaming accessories",
+    "icon": "Gamepad2",
+    "parentId": "electronics",
+    "isActive": true,
+    "sortOrder": 4,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "beauty",
+    "name": "Beauty & Personal Care",
+    "description": "Skincare, makeup, fragrances, and personal care products",
+    "icon": "Sparkles",
+    "isActive": true,
+    "sortOrder": 5,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "skincare",
+    "name": "Skincare",
+    "description": "Face care, body care, and skincare essentials",
+    "icon": "Heart",
+    "parentId": "beauty",
+    "isActive": true,
+    "sortOrder": 1,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "makeup",
+    "name": "Makeup",
+    "description": "Cosmetics, foundations, lipsticks, and beauty tools",
+    "icon": "Palette",
+    "parentId": "beauty",
+    "isActive": true,
+    "sortOrder": 2,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "fragrances",
+    "name": "Fragrances",
+    "description": "Perfumes, body sprays, and scented products",
+    "icon": "Flower",
+    "parentId": "beauty",
+    "isActive": true,
+    "sortOrder": 3,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "personal-care",
+    "name": "Personal Care",
+    "description": "Hair care, oral care, and personal hygiene products",
+    "icon": "User",
+    "parentId": "beauty",
+    "isActive": true,
+    "sortOrder": 4,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "sports",
+    "name": "Sports & Fitness",
+    "description": "Sports equipment, fitness gear, and outdoor activities",
+    "icon": "Dumbbell",
+    "isActive": true,
+    "sortOrder": 6,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "fitness-equipment",
+    "name": "Fitness Equipment",
+    "description": "Home gym equipment, weights, and exercise machines",
+    "icon": "Activity",
+    "parentId": "sports",
+    "isActive": true,
+    "sortOrder": 1,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "outdoor-sports",
+    "name": "Outdoor Sports",
+    "description": "Equipment for tennis, football, cricket, and outdoor activities",
+    "icon": "MapPin",
+    "parentId": "sports",
+    "isActive": true,
+    "sortOrder": 2,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "sports-apparel",
+    "name": "Sports Apparel",
+    "description": "Athletic wear, sportswear, and activewear",
+    "icon": "Shirt",
+    "parentId": "sports",
+    "isActive": true,
+    "sortOrder": 3,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "cycling",
+    "name": "Cycling",
+    "description": "Bicycles, cycling gear, and bike accessories",
+    "icon": "Bike",
+    "parentId": "sports",
+    "isActive": true,
+    "sortOrder": 4,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "automotive",
+    "name": "Automotive",
+    "description": "Car accessories, tools, and automotive parts",
+    "icon": "Car",
+    "isActive": true,
+    "sortOrder": 7,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "car-accessories",
+    "name": "Car Accessories",
+    "description": "Interior and exterior car accessories",
+    "icon": "Settings",
+    "parentId": "automotive",
+    "isActive": true,
+    "sortOrder": 1,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "car-care",
+    "name": "Car Care",
+    "description": "Cleaning products and car maintenance items",
+    "icon": "Droplets",
+    "parentId": "automotive",
+    "isActive": true,
+    "sortOrder": 2,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "automotive-tools",
+    "name": "Tools & Equipment",
+    "description": "Automotive tools and repair equipment",
+    "icon": "Wrench",
+    "parentId": "automotive",
+    "isActive": true,
+    "sortOrder": 3,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "books",
+    "name": "Books & Media",
+    "description": "Books, ebooks, audiobooks, and educational materials",
+    "icon": "Book",
+    "isActive": true,
+    "sortOrder": 8,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "fiction",
+    "name": "Fiction",
+    "description": "Novels, short stories, and fictional literature",
+    "icon": "BookOpen",
+    "parentId": "books",
+    "isActive": true,
+    "sortOrder": 1,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "non-fiction",
+    "name": "Non-Fiction",
+    "description": "Biographies, self-help, history, and educational books",
+    "icon": "GraduationCap",
+    "parentId": "books",
+    "isActive": true,
+    "sortOrder": 2,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "educational",
+    "name": "Educational",
+    "description": "Textbooks, study guides, and academic materials",
+    "icon": "School",
+    "parentId": "books",
+    "isActive": true,
+    "sortOrder": 3,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "children-books",
+    "name": "Children's Books",
+    "description": "Picture books, early readers, and children's literature",
+    "icon": "Baby",
+    "parentId": "books",
+    "isActive": true,
+    "sortOrder": 4,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "toys",
+    "name": "Toys & Games",
+    "description": "Educational toys, board games, and entertainment for kids",
+    "icon": "Puzzle",
+    "isActive": true,
+    "sortOrder": 9,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "educational-toys",
+    "name": "Educational Toys",
+    "description": "Learning toys and educational games for children",
+    "icon": "Brain",
+    "parentId": "toys",
+    "isActive": true,
+    "sortOrder": 1,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "board-games",
+    "name": "Board Games",
+    "description": "Family board games, strategy games, and puzzles",
+    "icon": "Dice6",
+    "parentId": "toys",
+    "isActive": true,
+    "sortOrder": 2,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "action-figures",
+    "name": "Action Figures",
+    "description": "Collectible figures, dolls, and character toys",
+    "icon": "UserCheck",
+    "parentId": "toys",
+    "isActive": true,
+    "sortOrder": 3,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "outdoor-toys",
+    "name": "Outdoor Toys",
+    "description": "Playground equipment, sports toys, and outdoor fun",
+    "icon": "TreePine",
+    "parentId": "toys",
+    "isActive": true,
+    "sortOrder": 4,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "health",
+    "name": "Health & Wellness",
+    "description": "Health supplements, medical devices, and wellness products",
+    "icon": "Heart",
+    "isActive": true,
+    "sortOrder": 10,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "supplements",
+    "name": "Supplements",
+    "description": "Vitamins, minerals, and nutritional supplements",
+    "icon": "Pill",
+    "parentId": "health",
+    "isActive": true,
+    "sortOrder": 1,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "medical-devices",
+    "name": "Medical Devices",
+    "description": "Blood pressure monitors, thermometers, and health monitoring",
+    "icon": "Stethoscope",
+    "parentId": "health",
+    "isActive": true,
+    "sortOrder": 2,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "wellness",
+    "name": "Wellness",
+    "description": "Aromatherapy, meditation aids, and wellness products",
+    "icon": "Leaf",
+    "parentId": "health",
+    "isActive": true,
+    "sortOrder": 3,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "garden",
+    "name": "Garden & Outdoor",
+    "description": "Gardening tools, plants, and outdoor living essentials",
+    "icon": "Flower2",
+    "isActive": true,
+    "sortOrder": 11,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "gardening-tools",
+    "name": "Gardening Tools",
+    "description": "Hand tools, power tools, and gardening equipment",
+    "icon": "Shovel",
+    "parentId": "garden",
+    "isActive": true,
+    "sortOrder": 1,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "plants-seeds",
+    "name": "Plants & Seeds",
+    "description": "Indoor plants, outdoor plants, and seeds",
+    "icon": "Seedling",
+    "parentId": "garden",
+    "isActive": true,
+    "sortOrder": 2,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "outdoor-living",
+    "name": "Outdoor Living",
+    "description": "Patio furniture, grills, and outdoor entertainment",
+    "icon": "Tent",
+    "parentId": "garden",
+    "isActive": true,
+    "sortOrder": 3,
+    "createdAt": "2024-01-01T00:00:00Z"
+  },
+  {
+    "id": "lawn-care",
+    "name": "Lawn Care",
+    "description": "Lawn mowers, fertilizers, and lawn maintenance",
+    "icon": "Grass",
+    "parentId": "garden",
+    "isActive": true,
+    "sortOrder": 4,
+    "createdAt": "2024-01-01T00:00:00Z"
+  }
+]

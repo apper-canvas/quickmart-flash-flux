@@ -123,9 +123,9 @@ const productService = {
     const product = productData.find(p => p.id === productId)
     if (!product || !product.reviews) {
       throw new Error('Product or rating not found')
-    }
+}
 
-const ratingIndex = product.reviews.findIndex(r => r.id === ratingId)
+    const ratingIndex = product.reviews.findIndex(r => r.id === ratingId)
     if (ratingIndex === -1) {
       throw new Error('Rating not found')
     }
@@ -134,6 +134,39 @@ const ratingIndex = product.reviews.findIndex(r => r.id === ratingId)
     return { ...product.reviews[ratingIndex] }
   },
 
+  async getByCategoryAndSubcategory(category, subcategory = null) {
+    await delay(300)
+    let filtered = productData.filter(p => p.category === category)
+    if (subcategory) {
+      filtered = filtered.filter(p => p.subcategory === subcategory)
+    }
+    return filtered.map(p => ({ ...p }))
+  },
+
+  async getCategorySummary() {
+    await delay(200)
+    const summary = {}
+    productData.forEach(product => {
+      const category = product.category
+      if (!summary[category]) {
+        summary[category] = {
+          count: 0,
+          subcategories: new Set()
+        }
+      }
+      summary[category].count++
+      if (product.subcategory) {
+        summary[category].subcategories.add(product.subcategory)
+      }
+    })
+    
+    // Convert sets to arrays
+    Object.keys(summary).forEach(category => {
+      summary[category].subcategories = Array.from(summary[category].subcategories)
+    })
+    
+    return summary
+  },
   // Cart-related product operations
   async validateCartItem(productId, options = {}) {
     await delay(150)

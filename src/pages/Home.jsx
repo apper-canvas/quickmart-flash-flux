@@ -67,9 +67,22 @@ const [cartOpen, setCartOpen] = useState(false)
 
   const handleProductClick = (productId) => {
     navigate(`/product/${productId}`)
-  }
+}
 
-const categories = ["all", "electronics", "clothing", "home", "books", "sports"]
+  const categories = [
+    "all", 
+    "electronics", 
+    "fashion", 
+    "home-appliances", 
+    "furniture", 
+    "beauty", 
+    "sports", 
+    "automotive", 
+    "books", 
+    "toys", 
+    "health", 
+    "garden"
+  ]
   
   const filteredProducts = products?.filter(product => {
     const matchesSearch = product?.name?.toLowerCase().includes(searchQuery.toLowerCase()) || false
