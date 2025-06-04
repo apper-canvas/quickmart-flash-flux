@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import ApperIcon from './ApperIcon'
 
-const MainFeature = ({ products = [], loading = false, onAddToCart }) => {
+const MainFeature = ({ products = [], loading = false, onAddToCart, onProductClick }) => {
   const [sortBy, setSortBy] = useState('featured')
   const [viewMode, setViewMode] = useState('grid')
   const [priceRange, setPriceRange] = useState([0, 50000])
@@ -67,15 +67,15 @@ const MainFeature = ({ products = [], loading = false, onAddToCart }) => {
     const discountPercentage = product?.price && product?.discountedPrice 
       ? Math.round(((product.price - product.discountedPrice) / product.price) * 100)
       : 0
-
-    return (
+return (
       <motion.div
         layout
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.3 }}
-        className="bg-white rounded-xl shadow-card hover:shadow-hover transition-all duration-300 overflow-hidden group product-card-hover"
+        className="bg-white rounded-xl shadow-card hover:shadow-hover transition-all duration-300 overflow-hidden group product-card-hover cursor-pointer"
+        onClick={() => onProductClick && onProductClick(product?.id)}
       >
         <div className="relative">
           <img
@@ -209,8 +209,8 @@ const MainFeature = ({ products = [], loading = false, onAddToCart }) => {
         </div>
       </div>
 
-      <div className="flex gap-6">
-{/* Filters Sidebar */}
+<div className="flex gap-6">
+        {/* Filters Sidebar */}
         <AnimatePresence>
           {(showFilters || (typeof window !== 'undefined' && window.innerWidth >= 1024)) && (
             <motion.div
@@ -304,7 +304,7 @@ const MainFeature = ({ products = [], loading = false, onAddToCart }) => {
           ) : (
             <div className="space-y-4">
               <AnimatePresence>
-                {sortedProducts.map((product) => (
+{sortedProducts.map((product) => (
                   <motion.div
                     key={product?.id}
                     layout
@@ -312,7 +312,8 @@ const MainFeature = ({ products = [], loading = false, onAddToCart }) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
-                    className="bg-white rounded-xl shadow-card hover:shadow-hover transition-all duration-300 p-6 flex items-center space-x-6"
+                    className="bg-white rounded-xl shadow-card hover:shadow-hover transition-all duration-300 p-6 flex items-center space-x-6 cursor-pointer"
+                    onClick={() => onProductClick && onProductClick(product?.id)}
                   >
                     <img
                       src={product?.images?.[0] || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200'}
