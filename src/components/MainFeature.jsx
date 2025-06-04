@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import ApperIcon from './ApperIcon'
-
+import { useCart } from '../hooks/useCart'
 const MainFeature = ({ products = [], loading = false, onAddToCart, onProductClick }) => {
 const [sortBy, setSortBy] = useState('featured')
   const [viewMode, setViewMode] = useState('grid')
@@ -613,63 +613,70 @@ return (
                 ))}
               </AnimatePresence>
             </motion.div>
-          ) : (
+) : (
             <div className="space-y-4">
               <AnimatePresence>
-{sortedProducts.map((product) => (
-                  <motion.div
-                    key={product?.id}
-                    layout
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                    className="bg-white rounded-xl shadow-card hover:shadow-hover transition-all duration-300 p-6 flex items-center space-x-6 cursor-pointer"
-                    onClick={() => onProductClick && onProductClick(product?.id)}
-                  >
-                    <img
-                      src={product?.images?.[0] || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200'}
-                      alt={product?.name || 'Product'}
-                      className="w-24 h-24 object-cover rounded-lg"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <span className="text-xs text-gray-500 uppercase tracking-wide">{product?.brand || 'Unknown Brand'}</span>
-                          <h3 className="font-semibold text-gray-800 mb-1">{product?.name || 'Product Name'}</h3>
-                          <div className="flex items-center mb-2">
-                            {[...Array(5)].map((_, i) => (
-                              <ApperIcon
-                                key={i}
-                                name="Star"
-                                className={`h-4 w-4 ${
-                                  i < Math.floor(product?.ratings || 0)
-                                    ? 'text-accent fill-accent'
-                                    : 'text-gray-300'
-                                }`}
-                              />
-                            ))}
-                            <span className="text-sm text-gray-600 ml-2">({product?.ratings || 0})</span>
+                {sortedProducts.map((product) => {
+                  const { addToCart } = useCart()
+                  
+                  return (
+                    <motion.div
+                      key={product?.id}
+                      layout
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="bg-white rounded-xl shadow-card hover:shadow-hover transition-all duration-300 p-6 flex items-center space-x-6 cursor-pointer"
+                      onClick={() => onProductClick && onProductClick(product?.id)}
+                    >
+                      <img
+                        src={product?.images?.[0] || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200'}
+                        alt={product?.name || 'Product'}
+                        className="w-24 h-24 object-cover rounded-lg"
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <span className="text-xs text-gray-500 uppercase tracking-wide">{product?.brand || 'Unknown Brand'}</span>
+                            <h3 className="font-semibold text-gray-800 mb-1">{product?.name || 'Product Name'}</h3>
+                            <div className="flex items-center mb-2">
+                              {[...Array(5)].map((_, i) => (
+                                <ApperIcon
+                                  key={i}
+                                  name="Star"
+                                  className={`h-4 w-4 ${
+                                    i < Math.floor(product?.ratings || 0)
+                                      ? 'text-accent fill-accent'
+                                      : 'text-gray-300'
+                                  }`}
+                                />
+                              ))}
+                              <span className="text-sm text-gray-600 ml-2">({product?.ratings || 0})</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-xl font-bold text-primary">₹{(product?.discountedPrice || product?.price || 0).toLocaleString()}</span>
+                              {product?.discountedPrice && product?.price !== product?.discountedPrice && (
+                                <span className="text-sm text-gray-500 line-through">₹{product.price.toLocaleString()}</span>
+                              )}
+                            </div>
                           </div>
-                          <div className="flex items-center space-x-2">
-                            <span className="text-xl font-bold text-primary">₹{(product?.discountedPrice || product?.price || 0).toLocaleString()}</span>
-                            {product?.discountedPrice && product?.price !== product?.discountedPrice && (
-                              <span className="text-sm text-gray-500 line-through">₹{product.price.toLocaleString()}</span>
-                            )}
-                          </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              addToCart(product)
+                            }}
+                            disabled={(product?.stock || 0) === 0}
+                            className="bg-primary hover:bg-primary-dark disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2"
+                          >
+                            <ApperIcon name="ShoppingCart" className="h-5 w-5" />
+                            <span>{(product?.stock || 0) === 0 ? 'Out of Stock' : 'Add to Cart'}</span>
+                          </button>
                         </div>
-                        <button
-                          onClick={() => onAddToCart(product)}
-                          disabled={(product?.stock || 0) === 0}
-                          className="bg-primary hover:bg-primary-dark disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2"
-                        >
-                          <ApperIcon name="ShoppingCart" className="h-5 w-5" />
-                          <span>{(product?.stock || 0) === 0 ? 'Out of Stock' : 'Add to Cart'}</span>
-                        </button>
                       </div>
-                    </div>
-                  </motion.div>
-                ))}
+                    </motion.div>
+                  )
+                })}
               </AnimatePresence>
             </div>
           )}

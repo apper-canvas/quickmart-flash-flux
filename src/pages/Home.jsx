@@ -197,9 +197,9 @@ const categories = ["all", "electronics", "clothing", "home", "books", "sports"]
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
               </button>
-            ))}
+))}
           </div>
-</div>
+        </div>
       </div>
 
       {/* Main Content */}
@@ -207,11 +207,11 @@ const categories = ["all", "electronics", "clothing", "home", "books", "sports"]
         <MainFeature 
           products={filteredProducts}
           loading={loading}
-          onAddToCart={addToCart}
+loading={loading}
           onProductClick={handleProductClick}
         />
       </main>
-      {/* Cart Sidebar */}
+
       {/* Cart Sidebar */}
       <AnimatePresence>
         {cartOpen && (
