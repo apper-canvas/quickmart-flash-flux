@@ -1683,57 +1683,226 @@ const buyNow = () => {
                             </div>
                           </div>
 
-                          {/* Payment Method */}
+{/* Payment Method */}
                           <div>
                             <h4 className="text-lg font-semibold mb-4">Payment Method</h4>
-                            <div className="space-y-3">
-                              <label className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input
-                                  type="radio"
-                                  name="paymentMethod"
-                                  value="cod"
-                                  checked={checkoutData.paymentMethod === 'cod'}
-                                  onChange={(e) => setCheckoutData(prev => ({ ...prev, paymentMethod: e.target.value }))}
-                                  className="text-primary focus:ring-primary"
-                                />
-                                <ApperIcon name="Truck" className="h-5 w-5 text-green-600" />
-                                <div>
-                                  <span className="font-medium">Cash on Delivery</span>
-                                  <p className="text-sm text-gray-600">Pay when your order arrives</p>
+                            <div className="space-y-4">
+                              {/* Cash on Delivery */}
+                              <div 
+                                className={`payment-method-card ${checkoutData.paymentMethod === 'cod' ? 'selected' : ''}`}
+                                onClick={() => setCheckoutData(prev => ({ ...prev, paymentMethod: 'cod' }))}
+                              >
+                                <div className="flex items-center space-x-3">
+                                  <input
+                                    type="radio"
+                                    name="paymentMethod"
+                                    value="cod"
+                                    checked={checkoutData.paymentMethod === 'cod'}
+                                    onChange={() => {}}
+                                    className="text-primary focus:ring-primary"
+                                  />
+                                  <ApperIcon name="Truck" className="h-6 w-6 text-green-600" />
+                                  <div className="flex-1">
+                                    <div className="flex items-center justify-between">
+                                      <span className="font-semibold text-gray-800">Cash on Delivery</span>
+                                      <div className="security-badge">
+                                        <ApperIcon name="Shield" className="h-4 w-4" />
+                                        <span>Secure</span>
+                                      </div>
+                                    </div>
+                                    <p className="text-sm text-gray-600 mt-1">Pay when your order arrives at your doorstep</p>
+                                    <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+                                      <span>✓ No online transaction</span>
+                                      <span>✓ Inspect before payment</span>
+                                      <span>✓ Change available</span>
+                                    </div>
+                                  </div>
                                 </div>
-                              </label>
+                              </div>
 
-                              <label className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input
-                                  type="radio"
-                                  name="paymentMethod"
-                                  value="card"
-                                  checked={checkoutData.paymentMethod === 'card'}
-                                  onChange={(e) => setCheckoutData(prev => ({ ...prev, paymentMethod: e.target.value }))}
-                                  className="text-primary focus:ring-primary"
-                                />
-                                <ApperIcon name="CreditCard" className="h-5 w-5 text-blue-600" />
-                                <div>
-                                  <span className="font-medium">Credit/Debit Card</span>
-                                  <p className="text-sm text-gray-600">Secure online payment</p>
+                              {/* Credit/Debit Card */}
+                              <div 
+                                className={`payment-method-card ${checkoutData.paymentMethod === 'card' ? 'selected' : ''}`}
+                                onClick={() => setCheckoutData(prev => ({ ...prev, paymentMethod: 'card' }))}
+                              >
+                                <div className="flex items-center space-x-3">
+                                  <input
+                                    type="radio"
+                                    name="paymentMethod"
+                                    value="card"
+                                    checked={checkoutData.paymentMethod === 'card'}
+                                    onChange={() => {}}
+                                    className="text-primary focus:ring-primary"
+                                  />
+                                  <ApperIcon name="CreditCard" className="h-6 w-6 text-blue-600" />
+                                  <div className="flex-1">
+                                    <div className="flex items-center justify-between">
+                                      <span className="font-semibold text-gray-800">Credit/Debit Card</span>
+                                      <div className="flex items-center space-x-2">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" className="h-4" />
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/MasterCard_Logo.svg" alt="Mastercard" className="h-4" />
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/American_Express_logo.svg" alt="Amex" className="h-4" />
+                                      </div>
+                                    </div>
+                                    <p className="text-sm text-gray-600 mt-1">Secure payment with SSL encryption</p>
+                                    <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+                                      <span>✓ 256-bit SSL</span>
+                                      <span>✓ PCI Compliant</span>
+                                      <span>✓ Instant processing</span>
+                                    </div>
+                                  </div>
                                 </div>
-                              </label>
+                              </div>
 
-                              <label className="flex items-center space-x-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input
-                                  type="radio"
-                                  name="paymentMethod"
-                                  value="upi"
-                                  checked={checkoutData.paymentMethod === 'upi'}
-                                  onChange={(e) => setCheckoutData(prev => ({ ...prev, paymentMethod: e.target.value }))}
-                                  className="text-primary focus:ring-primary"
-                                />
-                                <ApperIcon name="Smartphone" className="h-5 w-5 text-purple-600" />
-                                <div>
-                                  <span className="font-medium">UPI Payment</span>
-                                  <p className="text-sm text-gray-600">Pay via UPI apps</p>
+                              {/* UPI Payment */}
+                              <div 
+                                className={`payment-method-card ${checkoutData.paymentMethod === 'upi' ? 'selected' : ''}`}
+                                onClick={() => setCheckoutData(prev => ({ ...prev, paymentMethod: 'upi' }))}
+                              >
+                                <div className="flex items-center space-x-3">
+                                  <input
+                                    type="radio"
+                                    name="paymentMethod"
+                                    value="upi"
+                                    checked={checkoutData.paymentMethod === 'upi'}
+                                    onChange={() => {}}
+                                    className="text-primary focus:ring-primary"
+                                  />
+                                  <ApperIcon name="Smartphone" className="h-6 w-6 text-purple-600" />
+                                  <div className="flex-1">
+                                    <div className="flex items-center justify-between">
+                                      <span className="font-semibold text-gray-800">UPI Payment</span>
+                                      <div className="flex items-center space-x-1">
+                                        <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full font-medium">UPI</span>
+                                      </div>
+                                    </div>
+                                    <p className="text-sm text-gray-600 mt-1">Pay using GPay, PhonePe, Paytm & more</p>
+                                    <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
+                                      <span>✓ Instant transfer</span>
+                                      <span>✓ No extra charges</span>
+                                      <span>✓ Bank secured</span>
+                                    </div>
+                                  </div>
                                 </div>
-                              </label>
+                              </div>
+
+                              {/* Payment Method Details */}
+                              <AnimatePresence>
+                                {checkoutData.paymentMethod === 'card' && (
+                                  <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="card-form-container"
+                                  >
+                                    <h5 className="font-semibold mb-4">Card Details</h5>
+                                    <div className="space-y-4">
+                                      <div className="card-input-group">
+                                        <input
+                                          type="text"
+                                          placeholder="1234 5678 9012 3456"
+                                          className="card-input"
+                                          maxLength="19"
+                                        />
+                                        <label className="card-input-label">Card Number</label>
+                                      </div>
+                                      
+                                      <div className="grid grid-cols-2 gap-4">
+                                        <div className="card-input-group">
+                                          <input
+                                            type="text"
+                                            placeholder="MM/YY"
+                                            className="card-input"
+                                            maxLength="5"
+                                          />
+                                          <label className="card-input-label">Expiry Date</label>
+                                        </div>
+                                        
+                                        <div className="card-input-group">
+                                          <input
+                                            type="text"
+                                            placeholder="123"
+                                            className="card-input"
+                                            maxLength="4"
+                                          />
+                                          <label className="card-input-label">CVV</label>
+                                        </div>
+                                      </div>
+                                      
+                                      <div className="card-input-group">
+                                        <input
+                                          type="text"
+                                          placeholder="John Doe"
+                                          className="card-input"
+                                        />
+                                        <label className="card-input-label">Cardholder Name</label>
+                                      </div>
+                                      
+                                      <div className="flex items-center justify-between pt-3 border-t">
+                                        <div className="flex items-center space-x-2">
+                                          <ApperIcon name="Lock" className="h-4 w-4 text-green-600" />
+                                          <span className="text-sm text-gray-600">Your card details are secure</span>
+                                        </div>
+                                        <div className="security-badge">
+                                          <ApperIcon name="Shield" className="h-4 w-4" />
+                                          <span>SSL Secured</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </motion.div>
+                                )}
+
+                                {checkoutData.paymentMethod === 'upi' && (
+                                  <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: 'auto' }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="upi-interface"
+                                  >
+                                    <h5 className="font-semibold mb-4">Choose UPI App</h5>
+                                    
+                                    <div className="upi-app-grid">
+                                      {[
+                                        { name: 'GPay', icon: '🟢', id: 'gpay' },
+                                        { name: 'PhonePe', icon: '🟣', id: 'phonepe' },
+                                        { name: 'Paytm', icon: '🔵', id: 'paytm' },
+                                        { name: 'BHIM', icon: '🟠', id: 'bhim' },
+                                        { name: 'Amazon Pay', icon: '🟡', id: 'amazonpay' },
+                                        { name: 'Other', icon: '⚪', id: 'other' }
+                                      ].map((app) => (
+                                        <button
+                                          key={app.id}
+                                          className="upi-app-button"
+                                        >
+                                          <span className="text-2xl mb-2">{app.icon}</span>
+                                          <span className="text-xs font-medium text-gray-700">{app.name}</span>
+                                        </button>
+                                      ))}
+                                    </div>
+
+                                    <div className="upi-qr-container">
+                                      <div className="w-32 h-32 mx-auto mb-3 bg-gray-100 rounded-lg flex items-center justify-center">
+                                        <ApperIcon name="QrCode" className="h-16 w-16 text-gray-400" />
+                                      </div>
+                                      <p className="text-sm text-gray-600 mb-2">Scan QR code with any UPI app</p>
+                                      <p className="text-xs text-gray-500">Or pay to UPI ID: merchant@upi</p>
+                                    </div>
+
+                                    <div className="flex items-center justify-between pt-3 border-t">
+                                      <div className="flex items-center space-x-2">
+                                        <ApperIcon name="Shield" className="h-4 w-4 text-green-600" />
+                                        <span className="text-sm text-gray-600">UPI transactions are bank secured</span>
+                                      </div>
+                                      <div className="security-badge">
+                                        <ApperIcon name="Zap" className="h-4 w-4" />
+                                        <span>Instant</span>
+                                      </div>
+                                    </div>
+                                  </motion.div>
+                                )}
+                              </AnimatePresence>
                             </div>
                           </div>
 

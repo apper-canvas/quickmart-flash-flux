@@ -158,3 +158,260 @@ background: #F39C12;
   background-color: #f8fafc;
   border-color: #e2e8f0;
 }
+
+/* Payment Interface Styles */
+.payment-method-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.payment-method-card:hover {
+  border-color: #e74c3c;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(231, 76, 60, 0.15);
+}
+
+.payment-method-card.selected {
+  border-color: #e74c3c;
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  box-shadow: 0 4px 20px rgba(231, 76, 60, 0.2);
+}
+
+.payment-method-card.selected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+}
+
+.card-form-container {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid #d1d5db;
+}
+
+.card-input-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.card-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.card-input:focus {
+  outline: none;
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.card-input.error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.card-input.valid {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+}
+
+.card-input-label {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  padding: 0 0.5rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.card-input:focus + .card-input-label,
+.card-input:not(:placeholder-shown) + .card-input-label {
+  top: 0;
+  font-size: 0.75rem;
+  color: #e74c3c;
+}
+
+.card-type-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 1.25rem;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.upi-interface {
+  background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid #d8b4fe;
+}
+
+.upi-app-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.upi-app-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: white;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.upi-app-button:hover {
+  border-color: #8b5cf6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+}
+
+.upi-app-button.selected {
+  border-color: #8b5cf6;
+  background: #f3e8ff;
+}
+
+.upi-qr-container {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  border: 2px dashed #8b5cf6;
+  margin: 1rem 0;
+}
+
+.security-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  animation: secureGlow 2s ease-in-out infinite alternate;
+}
+
+.payment-processing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.payment-spinner {
+  width: 4rem;
+  height: 4rem;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #e74c3c;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1.5rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.payment-success-animation {
+  animation: paymentPulse 0.6s ease-out;
+}
+
+.card-preview {
+  perspective: 1000px;
+  margin-bottom: 2rem;
+}
+
+.card-preview-inner {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.card-preview.flipped .card-preview-inner {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-face.back {
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* Responsive Payment Styles */
+@media (max-width: 768px) {
+  .card-form-container {
+    padding: 1.5rem;
+  }
+  
+  .upi-interface {
+    padding: 1.5rem;
+  }
+  
+  .upi-app-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .payment-method-card {
+    padding: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-input {
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+  
+  .upi-app-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
