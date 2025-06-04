@@ -117,10 +117,47 @@ setLoading(false);
 
   const getCurrentPageProducts = () => {
     const filtered = getFilteredProducts();
-    const startIndex = (currentPage - 1) * itemsPerPage;
+const startIndex = (currentPage - 1) * itemsPerPage;
     return filtered.slice(startIndex, startIndex + itemsPerPage);
   };
-const currentProducts = getCurrentPageProducts();
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    setSelectedSubcategory('all');
+    setCurrentPage(1);
+  };
+
+  const handleSubcategoryChange = (subcategory) => {
+    setSelectedSubcategory(subcategory);
+    setCurrentPage(1);
+  };
+
+  const getSelectedCategoryData = () => {
+    return categoryHierarchy.find(cat => cat.id === selectedCategory);
+  };
+
+  const handlePriceRangeChange = (field, value) => {
+    setPriceRange(prev => ({
+      ...prev,
+      [field]: value
+    }));
+    setCurrentPage(1);
+  };
+
+  const resetFilters = () => {
+    setSearchTerm('');
+    setSelectedCategory('all');
+    setSelectedSubcategory('all');
+    setPriceRange({ min: '', max: '' });
+    setSortBy('featured');
+    setCurrentPage(1);
+  };
+
+  const getMainCategories = () => {
+    return categoryHierarchy.filter(cat => !cat.parentId);
+  };
+
+  const currentProducts = getCurrentPageProducts();
   const totalPages = Math.ceil(getFilteredProducts().length / itemsPerPage);
   const selectedCategoryData = getSelectedCategoryData();
 
@@ -309,44 +346,10 @@ const currentProducts = getCurrentPageProducts();
           </div>
         </div>
       )}
-const handleCategoryChange = (category) => {
-    setSelectedCategory(category);
-    setSelectedSubcategory('all');
-    setCurrentPage(1);
-  };
 
-  const handleSubcategoryChange = (subcategory) => {
-    setSelectedSubcategory(subcategory);
-    setCurrentPage(1);
-  };
-
-  const getSelectedCategoryData = () => {
-    return categoryHierarchy.find(cat => cat.id === selectedCategory);
-  };
-
-  const handlePriceRangeChange = (field, value) => {
-    setPriceRange(prev => ({
-      ...prev,
-      [field]: value
-    }));
-    setCurrentPage(1);
-  };
-
-  const resetFilters = () => {
-    setSearchTerm('');
-    setSelectedCategory('all');
-    setSelectedSubcategory('all');
-    setPriceRange({ min: '', max: '' });
-    setSortBy('featured');
-    setCurrentPage(1);
-  };
-
-  const getMainCategories = () => {
-    return categoryHierarchy.filter(cat => !cat.parentId);
-  };
-{/* Main Content */}
-<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <MainFeature 
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<MainFeature 
           products={currentProducts}
           loading={loading}
           onProductClick={handleProductClick}
@@ -390,7 +393,8 @@ const handleCategoryChange = (category) => {
           </div>
         )}
       </main>
-{/* Cart Sidebar */}
+
+      {/* Cart Sidebar */}
       <AnimatePresence>
         {cartOpen && (
           <>
