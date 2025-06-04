@@ -13,20 +13,20 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
       
-      <ToastContainer
+<ToastContainer
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
-closeOnClick
         rtl={false}
         pauseOnFocusLoss
         draggable
         pauseOnHover
         theme="light"
-      />
+/>
     </div>
   )
+}
 
 export default App

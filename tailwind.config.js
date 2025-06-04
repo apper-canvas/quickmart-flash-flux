@@ -135,9 +135,9 @@ theme: {
           '0%': { transform: 'translateX(100%)', opacity: '0' },
           '100%': { transform: 'translateX(0)', opacity: '1' }
         },
-        cartCountPulse: {
+cartCountPulse: {
           '0%': { transform: 'scale(1)' },
-'50%': { transform: 'scale(1.2)' },
+          '50%': { transform: 'scale(1.2)' },
           '100%': { transform: 'scale(1)' }
         }
       }
