@@ -72,7 +72,7 @@ colors: {
         '3xl': '33px',
         '4xl': '40px'
       },
-      spacing: {
+spacing: {
         '18': '4.5rem',
         '88': '22rem'
       },
@@ -82,7 +82,12 @@ colors: {
         'bounce-gentle': 'bounceGentle 0.6s ease-out',
         'card-flip': 'cardFlip 0.6s ease-in-out',
         'payment-pulse': 'paymentPulse 2s ease-in-out infinite',
-        'secure-glow': 'secureGlow 1.5s ease-in-out infinite alternate'
+        'secure-glow': 'secureGlow 1.5s ease-in-out infinite alternate',
+        'cart-bounce': 'cartBounce 0.6s ease-out',
+        'cart-item-add': 'cartItemAdd 0.4s ease-out',
+        'cart-notification': 'cartNotification 0.5s ease-out',
+        'cart-slide-in': 'cartSlideIn 0.3s ease-out',
+        'cart-count-pulse': 'cartCountPulse 0.3s ease-out'
       },
       keyframes: {
         fadeIn: {
@@ -110,6 +115,29 @@ colors: {
         secureGlow: {
           '0%': { boxShadow: '0 0 5px rgba(34, 197, 94, 0.3)' },
           '100%': { boxShadow: '0 0 20px rgba(34, 197, 94, 0.6)' }
+        },
+        cartBounce: {
+          '0%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.2) rotate(10deg)' },
+          '100%': { transform: 'scale(1) rotate(0deg)' }
+        },
+        cartItemAdd: {
+          '0%': { transform: 'scale(0) translateY(-50px)', opacity: '0' },
+          '50%': { transform: 'scale(1.1) translateY(-10px)', opacity: '0.8' },
+          '100%': { transform: 'scale(1) translateY(0)', opacity: '1' }
+        },
+        cartNotification: {
+          '0%': { transform: 'scale(0.8)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' }
+        },
+        cartSlideIn: {
+          '0%': { transform: 'translateX(100%)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' }
+        },
+        cartCountPulse: {
+          '0%': { transform: 'scale(1)' },
+          '50%': { transform: 'scale(1.3)' },
+          '100%': { transform: 'scale(1)' }
         }
       }
     },

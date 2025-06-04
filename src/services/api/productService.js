@@ -131,7 +131,67 @@ const productService = {
     }
 
     product.reviews[ratingIndex] = { ...product.reviews[ratingIndex], ...updates }
+product.reviews[ratingIndex] = { ...product.reviews[ratingIndex], ...updates }
     return { ...product.reviews[ratingIndex] }
+  },
+
+  // Cart-related product operations
+  async validateCartItem(productId, options = {}) {
+    await delay(150)
+    const product = productData.find(p => p.id === productId)
+    if (!product) {
+      throw new Error('Product not found')
+    }
+
+    // Check stock availability
+    if (product.stock <= 0) {
+      throw new Error('Product is out of stock')
+    }
+
+    // Validate size selection for applicable products
+    if (product.hasSizes && !options.size) {
+      throw new Error('Please select a size')
+    }
+
+    // Validate color selection for applicable products
+    if (product.hasColors && !options.color) {
+      throw new Error('Please select a color')
+    }
+
+    return {
+      valid: true,
+      product: { ...product },
+      availableStock: product.stock
+    }
+  },
+
+  async updateStock(productId, quantity) {
+    await delay(200)
+    const product = productData.find(p => p.id === productId)
+    if (!product) {
+      throw new Error('Product not found')
+    }
+
+    if (product.stock < quantity) {
+      throw new Error('Insufficient stock')
+    }
+
+    product.stock -= quantity
+    return { ...product }
+  },
+
+  async checkStockAvailability(productId, requestedQuantity) {
+    await delay(100)
+    const product = productData.find(p => p.id === productId)
+    if (!product) {
+      throw new Error('Product not found')
+    }
+
+    return {
+      available: product.stock >= requestedQuantity,
+      currentStock: product.stock,
+      maxQuantity: Math.min(product.stock, 10) // Limit max quantity to 10
+    }
   }
 }
 
