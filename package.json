@@ -23,7 +23,7 @@
     "@reduxjs/toolkit": "2.7.0",
     "react-stars": "^2.2.5",
     "react-credit-cards-2": "1.0.3",
-    "react-context-selector": "^2.0.0",
+    "react-context-selector": "1.0.3",
     "use-local-storage-state": "^19.4.0"
   },
   "devDependencies": {
