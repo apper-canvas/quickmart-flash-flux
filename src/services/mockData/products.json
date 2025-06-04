@@ -49,7 +49,26 @@
     ],
     "category": "sports",
     "brand": "Nike",
-    "ratings": 4.6,
+"ratings": 4.6,
+    "reviewCount": 203,
+    "ratingBreakdown": {
+      "5": 95,
+      "4": 78,
+      "3": 25,
+      "2": 4,
+      "1": 1
+    },
+    "reviews": [
+      {
+        "id": "r4",
+        "userId": "u4",
+        "userName": "Sneha Patel",
+        "rating": 5,
+        "comment": "Comfortable shoes with excellent cushioning. Perfect for running.",
+        "date": "2024-01-08",
+        "verified": true
+      }
+    ],
     "stock": 25,
     "seller": {
       "name": "SportZone",

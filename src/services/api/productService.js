@@ -59,8 +59,79 @@ const productService = {
       p.name.toLowerCase().includes(query.toLowerCase()) ||
       p.description.toLowerCase().includes(query.toLowerCase()) ||
       p.brand.toLowerCase().includes(query.toLowerCase())
-    )
+)
     return results.map(p => ({ ...p }))
+  },
+
+  async submitRating(productId, ratingData) {
+    await delay(400)
+    const product = productData.find(p => p.id === productId)
+    if (!product) {
+      throw new Error('Product not found')
+    }
+
+    // Simulate rating submission
+    const newRating = {
+      id: `r${Date.now()}`,
+      userId: ratingData.userId || 'anonymous',
+      userName: ratingData.userName || 'Anonymous User',
+      rating: ratingData.rating,
+      comment: ratingData.comment,
+      date: new Date().toISOString().split('T')[0],
+      verified: false
+    }
+
+    // Add to product reviews
+    if (!product.reviews) product.reviews = []
+    product.reviews.unshift(newRating)
+
+    // Update rating breakdown
+    if (!product.ratingBreakdown) {
+      product.ratingBreakdown = { "5": 0, "4": 0, "3": 0, "2": 0, "1": 0 }
+    }
+    product.ratingBreakdown[ratingData.rating.toString()]++
+
+    // Update overall rating and review count
+    const totalReviews = Object.values(product.ratingBreakdown).reduce((sum, count) => sum + count, 0)
+    const weightedSum = Object.entries(product.ratingBreakdown).reduce((sum, [stars, count]) => {
+      return sum + (parseInt(stars) * count)
+    }, 0)
+    
+    product.ratings = (weightedSum / totalReviews).toFixed(1)
+    product.reviewCount = totalReviews
+
+    return { ...newRating }
+  },
+
+  async getRatings(productId) {
+    await delay(200)
+    const product = productData.find(p => p.id === productId)
+    if (!product) {
+      throw new Error('Product not found')
+    }
+
+    return {
+      overall: product.ratings || 0,
+      reviewCount: product.reviewCount || 0,
+      breakdown: product.ratingBreakdown || {},
+      reviews: product.reviews || []
+    }
+  },
+
+  async updateRating(productId, ratingId, updates) {
+    await delay(300)
+    const product = productData.find(p => p.id === productId)
+    if (!product || !product.reviews) {
+      throw new Error('Product or rating not found')
+    }
+
+    const ratingIndex = product.reviews.findIndex(r => r.id === ratingId)
+    if (ratingIndex === -1) {
+      throw new Error('Rating not found')
+    }
+
+    product.reviews[ratingIndex] = { ...product.reviews[ratingIndex], ...updates }
+    return { ...product.reviews[ratingIndex] }
   }
 }
 

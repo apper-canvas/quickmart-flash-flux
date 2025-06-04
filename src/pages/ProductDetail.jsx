@@ -53,15 +53,14 @@ const [cart, setCart] = useState([])
     {
       type: 'exchange',
       title: 'Exchange Offer',
-      description: 'Up to ₹5000 off on exchange of old products',
+description: 'Up to ₹5000 off on exchange of old products',
       code: 'EXCHANGE',
       savings: '₹5000',
-color: 'orange'
+      icon: 'RefreshCw',
+      color: 'orange'
     }
   ])
-  
-  const [warrantyInfo] = useState({
-    duration: '2 Years',
+const [warrantyInfo] = useState({
     duration: '2 Years',
     type: 'Comprehensive Warranty',
     coverage: [
@@ -111,10 +110,10 @@ color: 'orange'
         const updatedCart = prev.map(item =>
           item.id === product.id 
             ? { ...item, quantity: item.quantity + quantity }
-            : item
+: item
         )
         toast.success(`Updated ${product.name} quantity in cart`)
-return updatedCart
+        return updatedCart
       } else {
         toast.success(`${product.name} added to cart`)
         return [...prev, cartItem]
@@ -219,10 +218,10 @@ return updatedCart
     if (warrantyRegistered) {
       toast.info("Product warranty is already registered")
       return
-    }
+}
     
     setWarrantyRegistered(true)
-toast.success("Warranty registered successfully! Registration details sent to your email.")
+    toast.success("Warranty registered successfully! Registration details sent to your email.")
   }
   const buyNow = () => {
     addToCart()
@@ -394,10 +393,10 @@ toast.success("Warranty registered successfully! Registration details sent to yo
                   <>
                     <span className="text-xl text-gray-500 line-through">₹{product.originalPrice}</span>
                     <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium">
-                      {discount}% OFF
+{discount}% OFF
                     </span>
                   </>
-)}
+                )}
               </div>
               <p className="text-green-600 text-sm font-medium">Inclusive of all taxes</p>
             </div>
@@ -467,10 +466,10 @@ toast.success("Warranty registered successfully! Registration details sent to yo
                           </div>
                         </div>
                       </motion.div>
-                    ))}
+))}
                     
                     <div className="text-center pt-2">
-<button className="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                      <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">
                         View All Offers & Terms
                       </button>
                     </div>
@@ -566,10 +565,10 @@ toast.success("Warranty registered successfully! Registration details sent to yo
                         </div>
                         <p className="text-xs text-red-600 mt-1">
                           Please check with a different PIN code or contact support
-                        </p>
+</p>
                       </div>
                     )}
-</motion.div>
+                  </motion.div>
                 )}
               </AnimatePresence>
             </div>
@@ -809,67 +808,246 @@ toast.success("Warranty registered successfully! Registration details sent to yo
                         </div>
                       </div>
                     </div>
-                  )}
+)}
                 </div>
               )}
 
               {activeTab === 'reviews' && (
                 <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">Customer Reviews</h3>
-                    <div className="flex items-center space-x-2">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <ApperIcon
-                            key={i}
-                            name="Star"
-                            className={`h-4 w-4 ${
-                              i < Math.floor(product.rating || 0)
-                                ? 'text-yellow-400 fill-current'
-                                : 'text-gray-300'
-                            }`}
-                          />
-                        ))}
+                  {/* Rating Overview */}
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Overall Rating */}
+                    <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-6 border border-yellow-200">
+                      <div className="text-center">
+                        <div className="text-4xl font-bold text-gray-800 mb-2">
+                          {ratingStats?.overall || product.ratings || 0}
+                        </div>
+                        <div className="flex justify-center mb-2">
+                          {[...Array(5)].map((_, i) => (
+                            <ApperIcon
+                              key={i}
+                              name="Star"
+                              className={`h-5 w-5 ${
+                                i < Math.floor(ratingStats?.overall || product.ratings || 0)
+                                  ? 'text-yellow-400 fill-current'
+                                  : 'text-gray-300'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <p className="text-sm text-gray-600">
+                          Based on {ratingStats?.reviewCount || product.reviewCount || 0} reviews
+                        </p>
                       </div>
-                      <span className="text-sm text-gray-600">
-                        {product.rating} out of 5 ({product.reviewCount || 0} reviews)
-                      </span>
+                    </div>
+
+                    {/* Rating Breakdown */}
+                    <div className="lg:col-span-2">
+                      <h4 className="font-semibold mb-4">Rating Breakdown</h4>
+                      <div className="space-y-2">
+                        {[5, 4, 3, 2, 1].map((stars) => {
+                          const breakdown = ratingStats?.breakdown || product.ratingBreakdown || {}
+                          const count = breakdown[stars.toString()] || 0
+                          const total = Object.values(breakdown).reduce((sum, c) => sum + c, 0)
+                          const percentage = total > 0 ? (count / total) * 100 : 0
+
+                          return (
+                            <div key={stars} className="flex items-center space-x-3">
+                              <span className="text-sm w-8">{stars}★</span>
+                              <div className="flex-1 rating-breakdown-bar">
+                                <div 
+                                  className="rating-breakdown-fill"
+                                  style={{ width: `${percentage}%` }}
+                                />
+                              </div>
+                              <span className="text-sm text-gray-600 w-12">
+                                {count}
+                              </span>
+                            </div>
+                          )
+                        })}
+                      </div>
                     </div>
                   </div>
-                  
-                  {product.reviews ? (
-                    <div className="space-y-4">
-                      {product.reviews.map((review, index) => (
-                        <div key={index} className="border-b border-gray-200 pb-4">
-                          <div className="flex items-center space-x-2 mb-2">
-                            <div className="flex items-center">
-                              {[...Array(5)].map((_, i) => (
-                                <ApperIcon
-                                  key={i}
-                                  name="Star"
-                                  className={`h-4 w-4 ${
-                                    i < review.rating
-                                      ? 'text-yellow-400 fill-current'
-                                      : 'text-gray-300'
-                                  }`}
-                                />
+
+                  {/* Add Review Button */}
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-semibold">Customer Reviews</h3>
+                    <button
+                      onClick={() => setShowRatingForm(!showRatingForm)}
+                      className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition-colors flex items-center space-x-2"
+                    >
+                      <ApperIcon name="Plus" className="h-4 w-4" />
+                      <span>Write Review</span>
+                    </button>
+                  </div>
+
+                  {/* Rating Form */}
+                  <AnimatePresence>
+                    {showRatingForm && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="rating-form"
+                      >
+                        <h4 className="font-semibold mb-4">Share Your Experience</h4>
+                        
+                        <div className="space-y-4">
+                          {/* Star Rating */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Your Rating *
+                            </label>
+                            <div className="flex space-x-1">
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <button
+                                  key={star}
+                                  type="button"
+                                  onClick={() => setUserRating(star)}
+                                  className="rating-star"
+                                >
+                                  <ApperIcon
+                                    name="Star"
+                                    className={`h-8 w-8 ${
+                                      star <= userRating
+                                        ? 'text-yellow-400 fill-current'
+                                        : 'text-gray-300 hover:text-yellow-300'
+                                    }`}
+                                  />
+                                </button>
                               ))}
                             </div>
-                            <span className="font-medium text-gray-800">{review.author}</span>
-                            <span className="text-sm text-gray-500">{review.date}</span>
                           </div>
-                          <p className="text-gray-700">{review.comment}</p>
+
+                          {/* Name Input */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Your Name *
+                            </label>
+                            <input
+                              type="text"
+                              value={userName}
+                              onChange={(e) => setUserName(e.target.value)}
+                              placeholder="Enter your name"
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                            />
+                          </div>
+
+                          {/* Comment Input */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Your Review *
+                            </label>
+                            <textarea
+                              value={userComment}
+                              onChange={(e) => setUserComment(e.target.value)}
+                              placeholder="Share your experience with this product..."
+                              rows={4}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                            />
+                          </div>
+
+                          {/* Submit Buttons */}
+                          <div className="flex space-x-3">
+                            <button
+                              onClick={handleRatingSubmit}
+                              disabled={submittingRating}
+                              className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors flex items-center space-x-2"
+                            >
+                              {submittingRating ? (
+                                <>
+                                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                  <span>Submitting...</span>
+                                </>
+                              ) : (
+                                <>
+                                  <ApperIcon name="Send" className="h-4 w-4" />
+                                  <span>Submit Review</span>
+                                </>
+                              )}
+                            </button>
+                            <button
+                              onClick={() => {
+                                setShowRatingForm(false)
+                                setUserRating(0)
+                                setUserComment('')
+                                setUserName('')
+                              }}
+                              className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors"
+                            >
+                              Cancel
+                            </button>
+                          </div>
                         </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  
+                  {/* Reviews List */}
+                  {(ratingStats?.reviews || product.reviews) ? (
+                    <div className="space-y-4">
+                      {(ratingStats?.reviews || product.reviews).map((review, index) => (
+                        <motion.div
+                          key={review.id || index}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="border border-gray-200 rounded-lg p-4 rating-hover-effect transition-all"
+                        >
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-semibold">
+                                {(review.userName || review.author || 'A').charAt(0).toUpperCase()}
+                              </div>
+                              <div>
+                                <h5 className="font-medium text-gray-800">
+                                  {review.userName || review.author}
+                                </h5>
+                                <div className="flex items-center space-x-2">
+                                  <div className="flex items-center">
+                                    {[...Array(5)].map((_, i) => (
+                                      <ApperIcon
+                                        key={i}
+                                        name="Star"
+                                        className={`h-4 w-4 ${
+                                          i < review.rating
+                                            ? 'text-yellow-400 fill-current'
+                                            : 'text-gray-300'
+                                        }`}
+                                      />
+                                    ))}
+                                  </div>
+                                  <span className="text-sm text-gray-500">{review.date}</span>
+                                  {review.verified && (
+                                    <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                                      Verified Purchase
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <p className="text-gray-700 leading-relaxed">{review.comment}</p>
+                        </motion.div>
                       ))}
                     </div>
                   ) : (
-                    <div className="text-center py-8">
-                      <ApperIcon name="MessageCircle" className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                      <p className="text-gray-500">No reviews yet. Be the first to review this product!</p>
+                    <div className="text-center py-12">
+                      <ApperIcon name="MessageCircle" className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold text-gray-600 mb-2">No reviews yet</h3>
+                      <p className="text-gray-500 mb-4">Be the first to review this product!</p>
+                      <button
+                        onClick={() => setShowRatingForm(true)}
+                        className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition-colors"
+                      >
+                        Write First Review
+                      </button>
                     </div>
                   )}
                 </div>
-              )}
+)}
             </motion.div>
           </AnimatePresence>
         </div>

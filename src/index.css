@@ -105,5 +105,57 @@
 }
 
 .Toastify__toast--warning {
-  background: #F39C12;
+background: #F39C12;
+}
+
+/* Rating System Styles */
+.rating-stars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.rating-star {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.rating-star:hover {
+  transform: scale(1.1);
+}
+
+.rating-breakdown-bar {
+  height: 8px;
+  background-color: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.rating-breakdown-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%);
+  transition: width 0.3s ease;
+}
+
+.rating-form {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.rating-submission-success {
+  animation: rating-pulse 0.6s ease-out;
+}
+
+@keyframes rating-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.rating-hover-effect:hover {
+  background-color: #f8fafc;
+  border-color: #e2e8f0;
+}
 }
