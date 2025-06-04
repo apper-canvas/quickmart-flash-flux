@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import ApperIcon from '../components/ApperIcon'
 import MainFeature from '../components/MainFeature'
 import productService from '../services/api/productService'
-
 const Home = () => {
+  const navigate = useNavigate()
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -13,7 +14,6 @@ const Home = () => {
   const [cartOpen, setCartOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
-
   useEffect(() => {
     const loadProducts = async () => {
       setLoading(true)
@@ -28,7 +28,11 @@ const Home = () => {
       }
     }
     loadProducts()
-  }, [])
+}, [])
+
+  const handleProductClick = (productId) => {
+    navigate(`/product/${productId}`)
+  }
 
   const addToCart = (product) => {
     setCart(prevCart => {
@@ -205,17 +209,18 @@ const Home = () => {
               </button>
             ))}
           </div>
-        </div>
+</div>
       </div>
-{/* Main Content */}
+
+      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <MainFeature 
           products={filteredProducts}
           loading={loading}
           onAddToCart={addToCart}
+          onProductClick={handleProductClick}
         />
       </main>
-
       {/* Cart Sidebar */}
       {/* Cart Sidebar */}
       <AnimatePresence>
