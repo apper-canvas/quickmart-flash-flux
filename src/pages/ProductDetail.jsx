@@ -19,9 +19,15 @@ const [quantity, setQuantity] = useState(1)
   const [deliveryInfo, setDeliveryInfo] = useState(null)
   const [checkingDelivery, setCheckingDelivery] = useState(false)
 const [cart, setCart] = useState([])
-  const [relatedProducts, setRelatedProducts] = useState([])
+const [relatedProducts, setRelatedProducts] = useState([])
   const [showWarranty, setShowWarranty] = useState(false)
   const [warrantyRegistered, setWarrantyRegistered] = useState(false)
+  const [showRatingForm, setShowRatingForm] = useState(false)
+  const [userRating, setUserRating] = useState(0)
+  const [userName, setUserName] = useState('')
+  const [userComment, setUserComment] = useState('')
+  const [submittingRating, setSubmittingRating] = useState(false)
+  const [ratingStats, setRatingStats] = useState(null)
   const [offers] = useState([
     {
       type: 'bank',
@@ -95,11 +101,26 @@ const [warrantyInfo] = useState({
       }
     }
     
-    if (id) {
+if (id) {
       loadProduct()
     }
   }, [id])
 
+  // Load rating statistics
+  useEffect(() => {
+    const loadRatingStats = async () => {
+      if (!id) return
+      
+      try {
+        const stats = await productService.getRatings(id)
+        setRatingStats(stats)
+      } catch (err) {
+        console.error('Failed to load rating stats:', err)
+      }
+    }
+    
+    loadRatingStats()
+  }, [id])
   const addToCart = () => {
     if (!product) return
     
@@ -217,12 +238,62 @@ const [warrantyInfo] = useState({
   const handleWarrantyRegistration = () => {
     if (warrantyRegistered) {
       toast.info("Product warranty is already registered")
-      return
+return
 }
     
     setWarrantyRegistered(true)
     toast.success("Warranty registered successfully! Registration details sent to your email.")
   }
+
+  const handleRatingSubmit = async () => {
+    // Validation
+    if (userRating === 0) {
+      toast.error("Please select a rating")
+      return
+    }
+    
+    if (!userName.trim()) {
+      toast.error("Please enter your name")
+      return
+    }
+    
+    if (!userComment.trim()) {
+      toast.error("Please write a review")
+      return
+    }
+
+    setSubmittingRating(true)
+    
+    try {
+      const ratingData = {
+        rating: userRating,
+        userName: userName.trim(),
+        comment: userComment.trim(),
+        userId: 'user123' // In a real app, this would come from auth
+      }
+
+      await productService.submitRating(id, ratingData)
+      
+      // Reload rating stats
+      const updatedStats = await productService.getRatings(id)
+      setRatingStats(updatedStats)
+      
+      // Reset form
+      setShowRatingForm(false)
+      setUserRating(0)
+      setUserName('')
+      setUserComment('')
+      
+      toast.success("Thank you for your review! It has been submitted successfully.")
+      
+    } catch (error) {
+      console.error('Rating submission failed:', error)
+      toast.error("Failed to submit review. Please try again.")
+    } finally {
+      setSubmittingRating(false)
+    }
+  }
+  
   const buyNow = () => {
     addToCart()
     toast.success("Proceeding to checkout...")
