@@ -20,8 +20,10 @@ const [quantity, setQuantity] = useState(1)
   const [checkingDelivery, setCheckingDelivery] = useState(false)
 const [cart, setCart] = useState([])
 const [relatedProducts, setRelatedProducts] = useState([])
-  const [showWarranty, setShowWarranty] = useState(false)
+const [showWarranty, setShowWarranty] = useState(false)
   const [warrantyRegistered, setWarrantyRegistered] = useState(false)
+  const [showSizeChart, setShowSizeChart] = useState(false)
+  const [selectedSize, setSelectedSize] = useState('')
   const [showRatingForm, setShowRatingForm] = useState(false)
   const [userRating, setUserRating] = useState(0)
   const [userName, setUserName] = useState('')
@@ -81,8 +83,40 @@ const [warrantyInfo] = useState({
       'Accidental damage'
     ],
     registrationRequired: true,
-    claimProcess: '1800-XXX-XXXX or visit service center'
+claimProcess: '1800-XXX-XXXX or visit service center'
   })
+
+  const [sizeChart] = useState({
+    available: ['clothing', 'sports', 'shoes'].includes(product?.category),
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    measurements: {
+      'XS': { chest: '32-34', waist: '26-28', hip: '34-36', length: '26' },
+      'S': { chest: '34-36', waist: '28-30', hip: '36-38', length: '27' },
+      'M': { chest: '36-38', waist: '30-32', hip: '38-40', length: '28' },
+      'L': { chest: '38-40', waist: '32-34', hip: '40-42', length: '29' },
+      'XL': { chest: '40-42', waist: '34-36', hip: '42-44', length: '30' },
+      'XXL': { chest: '42-44', waist: '36-38', hip: '44-46', length: '31' }
+    },
+    conversions: {
+      'XS': { us: 'XS', eu: '32', uk: '4' },
+      'S': { us: 'S', eu: '34', uk: '6' },
+      'M': { us: 'M', eu: '36', uk: '8' },
+      'L': { us: 'L', eu: '38', uk: '10' },
+      'XL': { us: 'XL', eu: '40', uk: '12' },
+      'XXL': { us: 'XXL', eu: '42', uk: '14' }
+    },
+    fitGuide: [
+      'Chest: Measure around the fullest part of your chest',
+      'Waist: Measure around the narrowest part of your waist',
+      'Hip: Measure around the fullest part of your hips',
+      'Length: Measured from shoulder to hem'
+    ]
+  })
+
+  const handleSizeSelection = (size) => {
+    setSelectedSize(size)
+    toast.success(`Size ${size} selected`)
+  }
   useEffect(() => {
     const loadProduct = async () => {
       setLoading(true)
@@ -746,25 +780,206 @@ return
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+</div>
 
-            {/* Quantity Selector */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Quantity:</label>
-              <div className="flex items-center space-x-3">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-colors"
+            {/* Size Chart */}
+            {sizeChart.available && (
+              <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl p-4 border border-indigo-200">
+                <div 
+                  className="flex items-center justify-between cursor-pointer"
+                  onClick={() => setShowSizeChart(!showSizeChart)}
                 >
-                  <ApperIcon name="Minus" className="h-4 w-4" />
-                </button>
-                <span className="w-12 text-center font-semibold">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-colors"
-                >
-                  <ApperIcon name="Plus" className="h-4 w-4" />
-                </button>
+                  <div className="flex items-center space-x-2">
+                    <ApperIcon name="Ruler" className="h-5 w-5 text-indigo-600" />
+                    <h3 className="font-semibold text-gray-800">Size Chart</h3>
+                    <span className="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full font-medium">
+                      Sizing Guide
+                    </span>
+                  </div>
+                  <motion.div
+                    animate={{ rotate: showSizeChart ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ApperIcon name="ChevronDown" className="h-5 w-5 text-gray-600" />
+                  </motion.div>
+                </div>
+
+                <AnimatePresence>
+                  {showSizeChart && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="mt-4 space-y-4"
+                    >
+                      <div className="bg-white rounded-lg p-4 border border-gray-200">
+                        {/* Size Selection */}
+                        <div className="mb-4">
+                          <h4 className="font-medium text-gray-800 mb-3">Select Your Size</h4>
+                          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                            {sizeChart.sizes.map((size) => (
+                              <button
+                                key={size}
+                                onClick={() => handleSizeSelection(size)}
+                                className={`p-3 border-2 rounded-lg font-medium transition-all ${
+                                  selectedSize === size
+                                    ? 'border-indigo-600 bg-indigo-50 text-indigo-700'
+                                    : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                                }`}
+                              >
+                                {size}
+                              </button>
+                            ))}
+                          </div>
+                          {selectedSize && (
+                            <div className="mt-3 p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+                              <p className="text-sm text-indigo-700">
+                                <strong>Selected:</strong> Size {selectedSize} - 
+                                Chest: {sizeChart.measurements[selectedSize]?.chest}", 
+                                Waist: {sizeChart.measurements[selectedSize]?.waist}"
+                              </p>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Measurements Table */}
+                        <div className="mb-4">
+                          <h4 className="font-medium text-gray-800 mb-3">Size Measurements (inches)</h4>
+                          <div className="overflow-x-auto">
+                            <table className="w-full border border-gray-200 rounded-lg">
+                              <thead className="bg-gray-50">
+                                <tr>
+                                  <th className="px-3 py-2 text-left text-sm font-medium text-gray-700 border-b">Size</th>
+                                  <th className="px-3 py-2 text-left text-sm font-medium text-gray-700 border-b">Chest</th>
+                                  <th className="px-3 py-2 text-left text-sm font-medium text-gray-700 border-b">Waist</th>
+                                  <th className="px-3 py-2 text-left text-sm font-medium text-gray-700 border-b">Hip</th>
+                                  <th className="px-3 py-2 text-left text-sm font-medium text-gray-700 border-b">Length</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {sizeChart.sizes.map((size, index) => (
+                                  <tr 
+                                    key={size} 
+                                    className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} ${
+                                      selectedSize === size ? 'bg-indigo-50 border-indigo-200' : ''
+                                    }`}
+                                  >
+                                    <td className="px-3 py-2 text-sm font-medium text-gray-800 border-b">{size}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-600 border-b">{sizeChart.measurements[size]?.chest}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-600 border-b">{sizeChart.measurements[size]?.waist}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-600 border-b">{sizeChart.measurements[size]?.hip}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-600 border-b">{sizeChart.measurements[size]?.length}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        {/* Size Conversion */}
+                        <div className="mb-4">
+                          <h4 className="font-medium text-gray-800 mb-3">International Size Conversion</h4>
+                          <div className="overflow-x-auto">
+                            <table className="w-full border border-gray-200 rounded-lg">
+                              <thead className="bg-gray-50">
+                                <tr>
+                                  <th className="px-3 py-2 text-left text-sm font-medium text-gray-700 border-b">Size</th>
+                                  <th className="px-3 py-2 text-left text-sm font-medium text-gray-700 border-b">US</th>
+                                  <th className="px-3 py-2 text-left text-sm font-medium text-gray-700 border-b">EU</th>
+                                  <th className="px-3 py-2 text-left text-sm font-medium text-gray-700 border-b">UK</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {sizeChart.sizes.map((size, index) => (
+                                  <tr 
+                                    key={size} 
+                                    className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} ${
+                                      selectedSize === size ? 'bg-indigo-50 border-indigo-200' : ''
+                                    }`}
+                                  >
+                                    <td className="px-3 py-2 text-sm font-medium text-gray-800 border-b">{size}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-600 border-b">{sizeChart.conversions[size]?.us}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-600 border-b">{sizeChart.conversions[size]?.eu}</td>
+                                    <td className="px-3 py-2 text-sm text-gray-600 border-b">{sizeChart.conversions[size]?.uk}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+
+                        {/* Fit Guide */}
+                        <div className="mb-4">
+                          <h4 className="font-medium text-gray-800 mb-3">How to Measure</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            {sizeChart.fitGuide.map((guide, index) => (
+                              <div key={index} className="flex items-start space-x-2">
+                                <ApperIcon name="Info" className="h-4 w-4 text-indigo-600 mt-0.5 flex-shrink-0" />
+                                <span className="text-sm text-gray-700">{guide}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Size Recommendations */}
+                        <div className="bg-yellow-50 rounded-lg p-3 border border-yellow-200">
+                          <div className="flex items-start space-x-2">
+                            <ApperIcon name="Lightbulb" className="h-4 w-4 text-yellow-600 mt-0.5" />
+                            <div>
+                              <p className="text-sm font-medium text-yellow-800">Size Recommendation</p>
+                              <p className="text-sm text-yellow-700 mt-1">
+                                For a comfortable fit, we recommend sizing up if you're between sizes. 
+                                All measurements are approximate and may vary slightly.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Contact for Size Help */}
+                        <div className="text-center pt-3 border-t">
+                          <p className="text-sm text-gray-600 mb-2">Need help with sizing?</p>
+                          <button className="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                            Contact Size Expert
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+{/* Quantity and Size Selector */}
+            <div className="space-y-4">
+              {/* Size Selection Summary */}
+              {sizeChart.available && selectedSize && (
+                <div className="bg-green-50 rounded-lg p-3 border border-green-200">
+                  <div className="flex items-center space-x-2">
+                    <ApperIcon name="CheckCircle" className="h-4 w-4 text-green-600" />
+                    <span className="text-sm font-medium text-green-700">
+                      Selected Size: <strong>{selectedSize}</strong>
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Quantity:</label>
+                <div className="flex items-center space-x-3">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-colors"
+                  >
+                    <ApperIcon name="Minus" className="h-4 w-4" />
+                  </button>
+                  <span className="w-12 text-center font-semibold">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-colors"
+                  >
+                    <ApperIcon name="Plus" className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             </div>
 
