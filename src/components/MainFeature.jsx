@@ -18,7 +18,7 @@ const MainFeature = ({ products = [], loading = false, onAddToCart }) => {
     const matchesPrice = price >= priceRange[0] && price <= priceRange[1]
     const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product?.brand)
     return matchesPrice && matchesBrand
-  }) || []
+}) || []
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
@@ -36,7 +36,7 @@ const MainFeature = ({ products = [], loading = false, onAddToCart }) => {
   })
 
   const toggleBrand = (brand) => {
-    setSelectedBrands(prev => 
+    setSelectedBrands(prev =>
       prev.includes(brand) 
         ? prev.filter(b => b !== brand)
         : [...prev, brand]
@@ -210,9 +210,9 @@ const MainFeature = ({ products = [], loading = false, onAddToCart }) => {
       </div>
 
       <div className="flex gap-6">
-        {/* Filters Sidebar */}
+{/* Filters Sidebar */}
         <AnimatePresence>
-          {(showFilters || window.innerWidth >= 1024) && (
+          {(showFilters || (typeof window !== 'undefined' && window.innerWidth >= 1024)) && (
             <motion.div
               initial={{ x: -300, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
