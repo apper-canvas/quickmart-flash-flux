@@ -1083,29 +1083,29 @@ if (warrantyRegistered) {
                         <span className="font-medium text-gray-700 capitalize">{key}:</span>
                         <span className="text-gray-600">{value}</span>
                       </div>
-                    ))
+))
                   ) : (
-                    <div className="col-span-2">
-                      <div className="space-y-3">
-                        <div className="flex justify-between py-2 border-b border-gray-200">
-                          <span className="font-medium text-gray-700">Brand:</span>
-                          <span className="text-gray-600">{product.brand}</span>
+                    <>
+                      <div className="col-span-2">
+                        <div className="space-y-3">
+                          <div className="flex justify-between py-2 border-b border-gray-200">
+                            <span className="font-medium text-gray-700">Brand:</span>
+                            <span className="text-gray-600">{product.brand}</span>
+                          </div>
+                          <div className="flex justify-between py-2 border-b border-gray-200">
+                            <span className="font-medium text-gray-700">Category:</span>
+                            <span className="text-gray-600 capitalize">{product.category}</span>
+                          </div>
+                          <div className="flex justify-between py-2 border-b border-gray-200">
+                            <span className="font-medium text-gray-700">SKU:</span>
+                            <span className="text-gray-600">{product.id}</span>
+                          </div>
                         </div>
-                        <div className="flex justify-between py-2 border-b border-gray-200">
-                          <span className="font-medium text-gray-700">Category:</span>
-                          <span className="text-gray-600 capitalize">{product.category}</span>
-                        </div>
-                        <div className="flex justify-between py-2 border-b border-gray-200">
-                          <span className="font-medium text-gray-700">SKU:</span>
-                          <span className="text-gray-600">{product.id}</span>
-                        </div>
-</div>
                       </div>
-                    </div>
+                    </>
                   )}
                 </div>
               )}
-
               {activeTab === 'reviews' && (
                 <div className="space-y-6">
                   {/* Rating Overview */}
