@@ -2,9 +2,9 @@
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+"./src/**/*.{js,ts,jsx,tsx}",
   ],
-theme: {
+  theme: {
     extend: {
       colors: {
         primary: {
@@ -68,9 +68,8 @@ theme: {
         'base': '16px',
         'lg': '19px',
         'xl': '23px',
-        '2xl': '28px',
-        '3xl': '33px',
-'4xl': '40px'
+'3xl': '33px',
+        '4xl': '40px'
       },
       spacing: {
         '18': '4.5rem',
@@ -79,9 +78,9 @@ theme: {
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out',
         'slide-up': 'slideUp 0.3s ease-out',
-        'bounce-gentle': 'bounceGentle 0.6s ease-out',
+'bounce-gentle': 'bounceGentle 0.6s ease-out',
         'card-flip': 'cardFlip 0.6s ease-in-out',
-'payment-pulse': 'paymentPulse 2s ease-in-out infinite',
+        'payment-pulse': 'paymentPulse 2s ease-in-out infinite',
         'secure-glow': 'secureGlow 1.5s ease-in-out infinite alternate',
         'cart-bounce': 'cartBounce 0.6s ease-out',
         'cart-item-add': 'cartItemAdd 0.4s ease-out',
@@ -128,9 +127,9 @@ theme: {
         },
         cartNotification: {
           '0%': { transform: 'scale(0.8)', opacity: '0' },
-          '50%': { transform: 'scale(1.1)', opacity: '0.9' },
+'50%': { transform: 'scale(1.1)', opacity: '0.9' },
           '100%': { transform: 'scale(1)', opacity: '1' }
-},
+        },
         cartSlideIn: {
           '0%': { transform: 'translateX(100%)', opacity: '0' },
           '100%': { transform: 'translateX(0)', opacity: '1' }

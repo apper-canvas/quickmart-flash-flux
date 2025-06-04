@@ -1,117 +1,150 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import ApperIcon from '../components/ApperIcon'
-import MainFeature from '../components/MainFeature'
-import productService from '../services/api/productService'
-const Home = () => {
-  const navigate = useNavigate()
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [cart, setCart] = useState([])
-const [cartOpen, setCartOpen] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("all")
+import React, { useState, useEffect } from 'react';
+import { productService, categoryService } from '../services';
+import MainFeature from '../components/MainFeature';
+import { useCart } from '../contexts/CartContext';
+import { toast } from 'react-toastify';
+import { ChevronDown, Search, Filter, Grid, List, Star, TrendingUp, Clock, Award, Users, Tag, Layers } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-  // Cart utility functions and computed values
-  const cartItemCount = cart.reduce((total, item) => total + (item?.quantity || 1), 0)
+const Home = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedSubcategory, setSelectedSubcategory] = useState('all');
+  const [categories, setCategories] = useState([]);
+  const [categoryHierarchy, setCategoryHierarchy] = useState([]);
+  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+  const [sortBy, setSortBy] = useState('featured');
+  const [viewMode, setViewMode] = useState('grid');
+  const [showFilters, setShowFilters] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [cartOpen, setCartOpen] = useState(false);
+  const itemsPerPage = 12;
+  
+  const { cart, addToCart, updateCartQuantity, removeFromCart, cartItemCount } = useCart();
   
   const cartTotal = cart.reduce((total, item) => {
-    const price = item?.discountedPrice || item?.price || 0
-    const quantity = item?.quantity || 1
-    return total + (price * quantity)
-  }, 0)
-
-  const addToCart = (product) => {
-    const existingItem = cart.find(item => item.id === product.id)
-    if (existingItem) {
-      updateCartQuantity(product.id, existingItem.quantity + 1)
-    } else {
-      setCart(prev => [...prev, { ...product, quantity: 1 }])
-      toast.success("Product added to cart!")
-    }
-  }
-
-  const updateCartQuantity = (productId, newQuantity) => {
-    if (newQuantity <= 0) {
-      removeFromCart(productId)
-      return
-    }
-    setCart(prev => prev.map(item => 
-      item.id === productId ? { ...item, quantity: newQuantity } : item
-    ))
-  }
-
-  const removeFromCart = (productId) => {
-    setCart(prev => prev.filter(item => item.id !== productId))
-    toast.success("Product removed from cart")
-  }
+    const price = item?.discountedPrice || item?.price || 0;
+    return total + (price * (item?.quantity || 1));
+  }, 0);
 
   useEffect(() => {
-    const loadProducts = async () => {
-      setLoading(true)
-      try {
-        const result = await productService.getAll()
-        setProducts(result)
-      } catch (err) {
-        setError(err.message)
-        toast.error("Failed to load products")
-      } finally {
-        setLoading(false)
-      }
+    fetchProducts();
+    fetchCategories();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const data = await productService.getAll();
+      setProducts(data);
+    } catch (err) {
+      setError(err.message);
+      toast.error('Failed to load products');
+    } finally {
+setLoading(false);
     }
-    loadProducts()
-}, [])
+  };
 
-  const handleProductClick = (productId) => {
-    navigate(`/product/${productId}`)
-}
+  const fetchCategories = async () => {
+    try {
+      const [allCategories, hierarchy] = await Promise.all([
+        categoryService.getActiveCategories(),
+        categoryService.getCategoryHierarchy()
+      ]);
+      setCategories(allCategories);
+      setCategoryHierarchy(hierarchy);
+    } catch (err) {
+      console.error('Failed to load categories:', err);
+    }
+};
 
-  const categories = [
-    "all", 
-    "electronics", 
-    "fashion", 
-    "home-appliances", 
-    "furniture", 
-    "beauty", 
-    "sports", 
-    "automotive", 
-    "books", 
-    "toys", 
-    "health", 
-    "garden"
-  ]
-  
-  const filteredProducts = products?.filter(product => {
-    const matchesSearch = product?.name?.toLowerCase().includes(searchQuery.toLowerCase()) || false
-    const matchesCategory = selectedCategory === "all" || product?.category === selectedCategory
-    return matchesSearch && matchesCategory
-  }) || []
+  const handleAddToCart = (product) => {
+    addToCart(product);
+    toast.success(`${product.name} added to cart!`);
+  };
+
+  const handleProductClick = (product) => {
+    // Handle product click - could navigate to product detail page
+    console.log('Product clicked:', product);
+  };
+
+  const getFilteredProducts = () => {
+    let filtered = products.filter(product => {
+      const matchesSearch = product?.name?.toLowerCase().includes(searchTerm.toLowerCase()) || false;
+      return matchesSearch;
+    });
+
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(product => {
+        if (selectedSubcategory !== 'all') {
+          return product.subcategory?.toLowerCase() === selectedSubcategory.toLowerCase();
+        }
+        return product.category?.toLowerCase() === selectedCategory.toLowerCase();
+      });
+    }
+
+    if (priceRange.min) {
+      filtered = filtered.filter(product => product.price >= parseFloat(priceRange.min));
+    }
+    if (priceRange.max) {
+      filtered = filtered.filter(product => product.price <= parseFloat(priceRange.max));
+    }
+
+    // Sort products
+    switch (sortBy) {
+      case 'price-low':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'price-high':
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case 'name':
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'rating':
+        filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        break;
+      default:
+        // Keep original order for 'featured'
+        break;
+    }
+
+    return filtered;
+  };
+
+  const getCurrentPageProducts = () => {
+    const filtered = getFilteredProducts();
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return filtered.slice(startIndex, startIndex + itemsPerPage);
+  };
+const currentProducts = getCurrentPageProducts();
+  const totalPages = Math.ceil(getFilteredProducts().length / itemsPerPage);
+  const selectedCategoryData = getSelectedCategoryData();
 
   if (error && !loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <ApperIcon name="AlertCircle" className="h-16 w-16 text-red-500 mx-auto mb-4" />
+          <div className="h-16 w-16 text-red-500 mx-auto mb-4">⚠️</div>
           <h2 className="text-xl font-semibold text-gray-800 mb-2">Oops! Something went wrong</h2>
           <p className="text-gray-600">{error}</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-md sticky top-0 z-40">
+      <header className="bg-white shadow-sm border-b sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-20">
+          <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center">
-              <ApperIcon name="ShoppingBag" className="h-8 w-8 text-primary mr-3" />
-              <h1 className="text-xl lg:text-2xl font-bold text-gray-800">QuickMart</h1>
+              <h1 className="text-2xl font-bold text-primary">ShopHub</h1>
             </div>
 
             {/* Search Bar */}
@@ -120,27 +153,28 @@ const [cartOpen, setCartOpen] = useState(false)
                 <input
                   type="text"
                   placeholder="Search products..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-12 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                 />
-                <ApperIcon name="Search" className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               </div>
             </div>
 
             {/* Cart Button */}
-            <button
-              onClick={() => setCartOpen(true)}
-              className="relative bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2"
-            >
-              <ApperIcon name="ShoppingCart" className="h-5 w-5" />
-              <span className="hidden sm:inline">Cart</span>
-              {cartItemCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-accent text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-semibold">
-                  {cartItemCount}
-                </span>
-              )}
-            </button>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setCartOpen(true)}
+                className="relative p-2 text-gray-600 hover:text-primary transition-colors"
+              >
+                <div className="h-6 w-6">🛒</div>
+                {cartItemCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {cartItemCount}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
 
           {/* Mobile Search */}
@@ -149,82 +183,214 @@ const [cartOpen, setCartOpen] = useState(false)
               <input
                 type="text"
                 placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               />
-              <ApperIcon name="Search" className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
             </div>
           </div>
         </div>
       </header>
 
-      {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-primary to-primary-dark text-white py-12 lg:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.h2 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl lg:text-5xl font-bold mb-4"
-          >
-            Discover Amazing Deals
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-lg lg:text-xl opacity-90 mb-8"
-          >
-            Shop from millions of products with best prices and fast delivery
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-wrap justify-center gap-4"
-          >
-            <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
-              <span className="text-sm font-medium">✨ Free Shipping on orders above ₹499</span>
-            </div>
-            <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
-              <span className="text-sm font-medium">🔥 Up to 70% OFF</span>
-            </div>
-          </motion.div>
-        </div>
-      </div>
+      {/* Filters Sidebar */}
+      {showFilters && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-30" onClick={() => setShowFilters(false)}>
+          <div className="fixed left-0 top-0 h-full w-80 bg-white shadow-xl z-40 overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-xl font-semibold">Filters</h2>
+                <button onClick={() => setShowFilters(false)} className="p-2 hover:bg-gray-100 rounded">
+                  ×
+                </button>
+              </div>
 
-      {/* Category Filter */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-wrap gap-2 lg:gap-4">
-            {categories.map((category) => (
+              {/* Category Filter */}
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-3 text-gray-800 flex items-center gap-2">
+                  <Layers className="h-5 w-5" />
+                  Categories
+                </h3>
+                <div className="space-y-2">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="category"
+                      value="all"
+                      checked={selectedCategory === 'all'}
+                      onChange={(e) => handleCategoryChange(e.target.value)}
+                      className="mr-3 text-primary"
+                    />
+                    <span className="text-gray-700">All Categories</span>
+                  </label>
+                  {getMainCategories().map((category) => (
+                    <label key={category.id} className="flex items-center">
+                      <input
+                        type="radio"
+                        name="category"
+                        value={category.id}
+                        checked={selectedCategory === category.id}
+                        onChange={(e) => handleCategoryChange(e.target.value)}
+                        className="mr-3 text-primary"
+                      />
+                      <span className="text-gray-700 flex items-center gap-2">
+                        <Tag className="h-4 w-4" />
+                        {category.name}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Subcategory Filter */}
+              {selectedCategoryData && selectedCategoryData.subcategories?.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold mb-3 text-gray-800">
+                    {selectedCategoryData.name} Subcategories
+                  </h3>
+                  <div className="space-y-2">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="subcategory"
+                        value="all"
+                        checked={selectedSubcategory === 'all'}
+                        onChange={(e) => handleSubcategoryChange(e.target.value)}
+                        className="mr-3 text-primary"
+                      />
+                      <span className="text-gray-700">All {selectedCategoryData.name}</span>
+                    </label>
+                    {selectedCategoryData.subcategories.map((subcategory) => (
+                      <label key={subcategory.id} className="flex items-center">
+                        <input
+                          type="radio"
+                          name="subcategory"
+                          value={subcategory.id}
+                          checked={selectedSubcategory === subcategory.id}
+                          onChange={(e) => handleSubcategoryChange(e.target.value)}
+                          className="mr-3 text-primary"
+                        />
+                        <span className="text-gray-700">{subcategory.name}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Price Range Filter */}
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-3 text-gray-800">Price Range</h3>
+                <div className="flex space-x-2">
+                  <input
+                    type="number"
+                    placeholder="Min"
+                    value={priceRange.min}
+                    onChange={(e) => handlePriceRangeChange('min', e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                  <input
+                    type="number"
+                    placeholder="Max"
+                    value={priceRange.max}
+                    onChange={(e) => handlePriceRangeChange('max', e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                  />
+                </div>
+              </div>
+
+              {/* Reset Filters */}
               <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 ${
-                  selectedCategory === category
-                    ? 'bg-primary text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                onClick={resetFilters}
+                className="w-full bg-gray-200 text-gray-800 py-2 rounded-lg font-medium hover:bg-gray-300 transition-colors"
               >
-                {category.charAt(0).toUpperCase() + category.slice(1)}
+                Reset Filters
               </button>
-))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
+const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    setSelectedSubcategory('all');
+    setCurrentPage(1);
+  };
 
+  const handleSubcategoryChange = (subcategory) => {
+    setSelectedSubcategory(subcategory);
+    setCurrentPage(1);
+  };
+
+  const getSelectedCategoryData = () => {
+    return categoryHierarchy.find(cat => cat.id === selectedCategory);
+  };
+
+  const handlePriceRangeChange = (field, value) => {
+    setPriceRange(prev => ({
+      ...prev,
+      [field]: value
+    }));
+    setCurrentPage(1);
+  };
+
+  const resetFilters = () => {
+    setSearchTerm('');
+    setSelectedCategory('all');
+    setSelectedSubcategory('all');
+    setPriceRange({ min: '', max: '' });
+    setSortBy('featured');
+    setCurrentPage(1);
+  };
+
+  const getMainCategories = () => {
+    return categoryHierarchy.filter(cat => !cat.parentId);
+  };
 {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <MainFeature 
-          products={filteredProducts}
+          products={currentProducts}
           loading={loading}
           onProductClick={handleProductClick}
+          onAddToCart={handleAddToCart}
         />
+        
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-8">
+            <div className="flex space-x-2">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              >
+                Previous
+              </button>
+              
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  className={`px-4 py-2 border rounded-lg ${
+                    currentPage === page
+                      ? 'bg-primary text-white border-primary'
+                      : 'border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  {page}
+                </button>
+              ))}
+              
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </main>
-
-      {/* Cart Sidebar */}
+{/* Cart Sidebar */}
       <AnimatePresence>
         {cartOpen && (
           <>
@@ -252,7 +418,7 @@ const [cartOpen, setCartOpen] = useState(false)
                   onClick={() => setCartOpen(false)}
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                 >
-                  <ApperIcon name="X" className="h-5 w-5" />
+                  ×
                 </button>
               </div>
 
@@ -260,7 +426,7 @@ const [cartOpen, setCartOpen] = useState(false)
               <div className="flex-1 overflow-y-auto p-6">
                 {cart.length === 0 ? (
                   <div className="text-center py-12">
-                    <ApperIcon name="ShoppingCart" className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                    <div className="h-16 w-16 text-gray-300 mx-auto mb-4">🛒</div>
                     <p className="text-gray-500">Your cart is empty</p>
                     <button
                       onClick={() => setCartOpen(false)}
@@ -286,14 +452,14 @@ const [cartOpen, setCartOpen] = useState(false)
                               onClick={() => updateCartQuantity(item.id, (item?.quantity || 1) - 1)}
                               className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-colors"
                             >
-                              <ApperIcon name="Minus" className="h-4 w-4" />
+                              -
                             </button>
                             <span className="font-medium">{item?.quantity || 1}</span>
                             <button
                               onClick={() => updateCartQuantity(item.id, (item?.quantity || 1) + 1)}
                               className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-colors"
                             >
-                              <ApperIcon name="Plus" className="h-4 w-4" />
+                              +
                             </button>
                           </div>
                         </div>
@@ -301,7 +467,7 @@ const [cartOpen, setCartOpen] = useState(false)
                           onClick={() => removeFromCart(item.id)}
                           className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-colors"
                         >
-                          <ApperIcon name="Trash2" className="h-4 w-4" />
+                          🗑️
                         </button>
                       </div>
                     ))}
@@ -318,8 +484,8 @@ const [cartOpen, setCartOpen] = useState(false)
                   </div>
                   <button
                     onClick={() => {
-                      toast.success("Proceeding to checkout...")
-                      setCartOpen(false)
+                      toast.success("Proceeding to checkout...");
+                      setCartOpen(false);
                     }}
                     className="w-full bg-primary hover:bg-primary-dark text-white py-3 rounded-lg font-semibold transition-colors duration-200"
                   >
@@ -331,8 +497,8 @@ const [cartOpen, setCartOpen] = useState(false)
           </>
         )}
       </AnimatePresence>
-    </div>
-  )
-}
+</div>
+  );
+};
 
-export default Home
+export default Home;

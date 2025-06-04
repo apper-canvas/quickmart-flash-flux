@@ -1,17 +1,23 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import ApperIcon from './ApperIcon'
-import { useCart } from '../contexts/CartContext'
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import ApperIcon from './ApperIcon';
+import { useCart } from '../contexts/CartContext';
+import { categoryService } from '../services';
+import { Tag, Layers } from 'lucide-react';
 
-const MainFeature = ({ products = [], loading = false, onAddToCart, onProductClick }) => {
-  const [sortBy, setSortBy] = useState('featured')
-  const [viewMode, setViewMode] = useState('grid')
-  const [priceRange, setPriceRange] = useState([0, 50000])
-const [selectedBrands, setSelectedBrands] = useState([])
-  const [showFilters, setShowFilters] = useState(false)
-  const [minRating, setMinRating] = useState(0)
-  const [availabilityFilter, setAvailabilityFilter] = useState('all')
-  const [discountFilter, setDiscountFilter] = useState('all')
+const MainFeature = ({ products = [], loading = false, onProductClick }) => {
+  const { addToCart } = useCart();
+  const [viewMode, setViewMode] = useState('grid');
+  const [selectedProduct, setSelectedProduct] = useState(null);
+const [isModalOpen, setIsModalOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [showFilters, setShowFilters] = useState(false);
+  const [sortBy, setSortBy] = useState('featured');
+  const [priceRange, setPriceRange] = useState([0, 50000]);
+  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [minRating, setMinRating] = useState(0);
+  const [availabilityFilter, setAvailabilityFilter] = useState('all');
+  const [discountFilter, setDiscountFilter] = useState('all');
   const [collapsedSections, setCollapsedSections] = useState({
     price: false,
     rating: false,
@@ -19,56 +25,111 @@ const [selectedBrands, setSelectedBrands] = useState([])
     discount: false,
     category: false,
     brands: false
-  })
+  });
+
+  useEffect(() => {
+    if (selectedProduct) {
+      setIsModalOpen(true);
+    }
+  }, [selectedProduct]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const categoryData = await categoryService.getAll();
+      setCategories(categoryData);
+    } catch (error) {
+      console.error('Failed to fetch categories:', error);
+    }
+  };
+
+  const getCategoryInfo = (product) => {
+    const category = categories.find(cat => cat.id === product.category);
+    const subcategory = categories.find(cat => cat.id === product.subcategory);
+    return { category, subcategory };
+};
+
+  const handleAddToCart = async (product) => {
+    try {
+      await addToCart(product);
+    } catch (error) {
+      console.error('Failed to add product to cart:', error);
+    }
+  };
+
+  const onAddToCart = (product) => {
+    handleAddToCart(product);
+  };
 
   // Get unique brands from products
-  const brands = [...new Set(products?.map(product => product?.brand).filter(Boolean))] || []
+  const brands = [...new Set(products?.map(product => product?.brand).filter(Boolean))] || [];
 
   const toggleSection = (section) => {
     setCollapsedSections(prev => ({
       ...prev,
       [section]: !prev[section]
-    }))
-  }
+    }));
+  };
 
-  // Filter and sort products
+  const toggleBrand = (brand) => {
+    setSelectedBrands(prev => 
+      prev.includes(brand) 
+        ? prev.filter(b => b !== brand)
+        : [...prev, brand]
+    );
+  };
+
+  const clearFilters = () => {
+    setPriceRange([0, 50000]);
+    setSelectedBrands([]);
+    setMinRating(0);
+    setAvailabilityFilter('all');
+    setDiscountFilter('all');
+  };
+// Filter and sort products
   const filteredProducts = products?.filter(product => {
-    const price = product?.discountedPrice || product?.price || 0
-    const matchesPrice = price >= priceRange[0] && price <= priceRange[1]
-    const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product?.brand)
-    return matchesPrice && matchesBrand
-}) || []
+    const price = product?.discountedPrice || product?.price || 0;
+    const matchesPrice = price >= priceRange[0] && price <= priceRange[1];
+    const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product?.brand);
+    const matchesRating = minRating === 0 || (product?.ratings || 0) >= minRating;
+    
+    let matchesAvailability = true;
+    if (availabilityFilter === 'in-stock') {
+      matchesAvailability = (product?.stock || 0) > 0;
+    } else if (availabilityFilter === 'out-of-stock') {
+      matchesAvailability = (product?.stock || 0) === 0;
+    }
+    
+    let matchesDiscount = true;
+    if (discountFilter === 'discounted') {
+      matchesDiscount = product?.discountedPrice && product?.price !== product?.discountedPrice;
+    } else if (discountFilter === 'no-discount') {
+      matchesDiscount = !product?.discountedPrice || product?.price === product?.discountedPrice;
+    }
+    
+    return matchesPrice && matchesBrand && matchesRating && matchesAvailability && matchesDiscount;
+  }) || [];
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
       case 'price-low':
-        return (a?.discountedPrice || a?.price || 0) - (b?.discountedPrice || b?.price || 0)
+        return (a?.discountedPrice || a?.price || 0) - (b?.discountedPrice || b?.price || 0);
       case 'price-high':
-        return (b?.discountedPrice || b?.price || 0) - (a?.discountedPrice || a?.price || 0)
+        return (b?.discountedPrice || b?.price || 0) - (a?.discountedPrice || a?.price || 0);
       case 'rating':
-        return (b?.ratings || 0) - (a?.ratings || 0)
+        return (b?.ratings || 0) - (a?.ratings || 0);
       case 'name':
-        return (a?.name || '').localeCompare(b?.name || '')
+        return (a?.name || '').localeCompare(b?.name || '');
       default:
-        return 0
+        return 0;
     }
-  })
-
-  const toggleBrand = (brand) => {
-    setSelectedBrands(prev =>
-      prev.includes(brand) 
-        ? prev.filter(b => b !== brand)
-        : [...prev, brand]
-    )
-  }
-
-  const clearFilters = () => {
-    setPriceRange([0, 50000])
-    setSelectedBrands([])
-  }
+  });
 
   const LoadingSkeleton = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {Array(8).fill(0).map((_, index) => (
         <div key={index} className="bg-white rounded-xl p-6 animate-pulse">
           <div className="skeleton h-48 rounded-lg mb-4"></div>
@@ -78,13 +139,13 @@ const [selectedBrands, setSelectedBrands] = useState([])
         </div>
       ))}
     </div>
-  )
-
-  const ProductCard = ({ product }) => {
-    const [isWishlisted, setIsWishlisted] = useState(false)
-const discountPercentage = product?.price && product?.discountedPrice 
+  );
+const ProductCard = ({ product }) => {
+    const [isWishlisted, setIsWishlisted] = useState(false);
+    const discountPercentage = product?.price && product?.discountedPrice 
       ? Math.round(((product.price - product.discountedPrice) / product.price) * 100)
-      : 0
+      : 0;
+      
     return (
       <motion.div
         layout
@@ -96,30 +157,64 @@ const discountPercentage = product?.price && product?.discountedPrice
         onClick={() => onProductClick && onProductClick(product?.id)}
       >
         <div className="relative">
-          <img
-            src={product?.images?.[0] || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400'}
-            alt={product?.name || 'Product'}
-            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-          />
+          {/* Discount Badge */}
           {discountPercentage > 0 && (
-            <div className="absolute top-3 left-3 bg-primary text-white px-2 py-1 rounded-md text-sm font-semibold">
+            <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded-lg text-xs font-bold z-10">
               {discountPercentage}% OFF
             </div>
           )}
+          
+          {/* Wishlist Button */}
           <button
-            onClick={() => setIsWishlisted(!isWishlisted)}
-            className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full hover:bg-white transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsWishlisted(!isWishlisted);
+            }}
+            className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-all z-10"
           >
             <ApperIcon 
               name="Heart" 
-              className={`h-5 w-5 ${isWishlisted ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} 
+              className={`h-4 w-4 ${isWishlisted ? 'text-red-500 fill-red-500' : 'text-gray-400'}`} 
             />
           </button>
+          
+          <img
+            src={product?.images?.[0] || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400'}
+            alt={product?.name || 'Product'}
+            className="w-full h-48 object-cover"
+          />
+          
+          {/* Stock Status */}
+          {(product?.stock || 0) === 0 && (
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <span className="text-white font-semibold">Out of Stock</span>
+            </div>
+          )}
         </div>
         
         <div className="p-6">
-          <div className="mb-2">
-            <span className="text-xs text-gray-500 uppercase tracking-wide">{product?.brand || 'Unknown Brand'}</span>
+          {/* Category Badge */}
+          {(() => {
+            const { category, subcategory } = getCategoryInfo(product);
+            return (
+              <div className="mb-2 flex items-center gap-2">
+                {category && (
+                  <span className="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary text-xs rounded-full">
+                    <Layers className="h-3 w-3" />
+                    {category.name}
+                  </span>
+                )}
+                {subcategory && (
+                  <span className="inline-flex items-center gap-1 px-2 py-1 bg-secondary/10 text-secondary text-xs rounded-full">
+                    <Tag className="h-3 w-3" />
+                    {subcategory.name}
+                  </span>
+                )}
+              </div>
+            );
+          })()}
+<div className="mb-2">
+<span className="text-xs text-gray-500 uppercase tracking-wide">{product?.brand || 'Unknown Brand'}</span>
           </div>
           <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2 group-hover:text-primary transition-colors">
             {product?.name || 'Product Name'}
@@ -160,7 +255,10 @@ const discountPercentage = product?.price && product?.discountedPrice
           </div>
 
           <button
-            onClick={() => onAddToCart(product)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCart(product);
+            }}
             disabled={(product?.stock || 0) === 0}
             className="w-full bg-primary hover:bg-primary-dark disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center space-x-2"
           >
@@ -169,7 +267,7 @@ const discountPercentage = product?.price && product?.discountedPrice
           </button>
         </div>
       </motion.div>
-    )
+    );
   }
 
   return (
@@ -223,9 +321,9 @@ const discountPercentage = product?.price && product?.discountedPrice
           
           <span className="text-sm text-gray-600">
             {sortedProducts.length} {sortedProducts.length === 1 ? 'product' : 'products'}
-          </span>
+</span>
         </div>
-</div>
+      </div>
 
       <div className="flex gap-6">
         {/* Filters Sidebar */}
@@ -245,8 +343,8 @@ const discountPercentage = product?.price && product?.discountedPrice
                   className="text-sm text-primary hover:text-primary-dark transition-colors"
                 >
                   Clear All
-                </button>
-</div>
+</button>
+              </div>
 
               {/* Price Range */}
               <div className="mb-6 pb-6 border-b border-gray-200">
@@ -298,8 +396,8 @@ const discountPercentage = product?.price && product?.discountedPrice
                       </div>
                     </motion.div>
                   )}
-                </AnimatePresence>
-</div>
+</AnimatePresence>
+              </div>
 
               {/* Rating Filter */}
               <div className="mb-6 pb-6 border-b border-gray-200">
@@ -358,8 +456,8 @@ const discountPercentage = product?.price && product?.discountedPrice
                       </div>
                     </motion.div>
                   )}
-                </AnimatePresence>
-</div>
+</AnimatePresence>
+              </div>
 
               {/* Availability Filter */}
               <div className="mb-6 pb-6 border-b border-gray-200">
@@ -407,8 +505,8 @@ const discountPercentage = product?.price && product?.discountedPrice
                       </div>
                     </motion.div>
                   )}
-                </AnimatePresence>
-</div>
+</AnimatePresence>
+              </div>
 
               {/* Discount Filter */}
               <div className="mb-6 pb-6 border-b border-gray-200">
@@ -456,8 +554,8 @@ const discountPercentage = product?.price && product?.discountedPrice
                       </div>
                     </motion.div>
                   )}
-                </AnimatePresence>
-</div>
+</AnimatePresence>
+              </div>
 
               {/* Category Specific Filters */}
               <div className="mb-6 pb-6 border-b border-gray-200">
@@ -540,8 +638,8 @@ const discountPercentage = product?.price && product?.discountedPrice
                       </div>
                     </motion.div>
                   )}
-                </AnimatePresence>
-</div>
+</AnimatePresence>
+              </div>
 
               {/* Brands */}
               {brands.length > 0 && (
@@ -610,8 +708,8 @@ const discountPercentage = product?.price && product?.discountedPrice
               <AnimatePresence>
                 {sortedProducts.map((product) => (
                   <ProductCard key={product?.id} product={product} />
-                ))}
-</AnimatePresence>
+))}
+              </AnimatePresence>
             </motion.div>
           ) : (
             <div className="space-y-4">
@@ -668,8 +766,8 @@ const discountPercentage = product?.price && product?.discountedPrice
                             }}
                             disabled={(product?.stock || 0) === 0}
                             className="bg-primary hover:bg-primary-dark disabled:bg-gray-300 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center space-x-2"
-                          >
-<ApperIcon name="ShoppingCart" className="h-5 w-5" />
+>
+                            <ApperIcon name="ShoppingCart" className="h-5 w-5" />
                             <span>{(product?.stock || 0) === 0 ? 'Out of Stock' : 'Add to Cart'}</span>
                           </button>
                         </div>
@@ -682,8 +780,8 @@ const discountPercentage = product?.price && product?.discountedPrice
           )}
         </div>
       </div>
-    </div>
-  )
-}
+</div>
+  );
+};
 
-export default MainFeature
+export default MainFeature;
